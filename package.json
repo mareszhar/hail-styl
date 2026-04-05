@@ -1,0 +1,39 @@
+{
+  "name": "@mszr/hail-styl",
+  "version": "0.1.0",
+  "description": "A Stylus-powered, versatile design system engine with a focus on safety and DX.",
+  "main": "src/index.styl",
+  "exports": {
+    ".": "./src/index.styl",
+    "./system": "./src/index-system.styl",
+    "./design": "./src/index-design.styl",
+    "./src/*": "./src/*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "src"
+  ],
+  "keywords": [
+    "design-system",
+    "stylus",
+    "css",
+    "design-tokens",
+    "oklch",
+    "dark-mode"
+  ],
+  "author": {
+    "name": "Mares Zhar",
+    "url": "https://github.com/mareszhar"
+  },
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mareszhar/hail-styl.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mareszhar/hail-styl/issues"
+  },
+  "homepage": "https://github.com/mareszhar/hail-styl#readme"
+}

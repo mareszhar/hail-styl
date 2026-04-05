@@ -1,0 +1,8 @@
+// dsSize(step: unit, base?: number | TokenOrVar, logs?: string): CSS calc()
+dsSize(step, base = null, logs = '')
+  $logs = dsTrace(logs, 'dsSize', Qs('@received -> "Step":' step '"Base":' (base != null ? base : 'auto')))
+  $resolvedBase = dsResolveSizeBase(step, base, $logs)
+  $resolvedStep = dsResolveSizeStep(step, $logs)
+  $unitSuffix = dsResolveSizeUnitSuffix(step, base, $logs)
+
+  return Calc($resolvedBase '*' $resolvedStep $unitSuffix)

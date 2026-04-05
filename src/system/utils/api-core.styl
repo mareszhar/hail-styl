@@ -1,0 +1,48 @@
+// Unit(value: CSS unit, unitSuffix: CSS unit suffix, logs?: string)
+Unit(value, unitSuffix = null, logs = '')
+  $logs = dsTrace(logs, 'Unit', Qs('@received -> "Value":' value '"Unit Suffix":' (unitSuffix != null ? unitSuffix : 'any') ))
+  dsExpectUnit(value, unitSuffix, $logs)
+  return value
+
+// Factor(factor: number between 0 and 1, logs?: string): number
+Factor(factor, logs = '')
+  $logs = dsTrace(logs, 'Factor', Qs('@received -> "Factor":' factor))
+  dsExpectFactor(factor, $logs)
+  return factor
+
+// RelativeFactor(relativeFactor: number between -1 and 1, logs?: string): number
+RelativeFactor(relativeFactor, logs = '')
+  $logs = dsTrace(logs, 'RelativeFactor', Qs('@received -> "Relative Factor":' relativeFactor))
+  dsExpectRelativeFactor(relativeFactor, $logs)
+  return relativeFactor
+
+// Val(token: string, registryName?: RegistryName, logs?: string): any (token's value)
+Val(token, registryName = 'default', logs = '')
+  $logs = dsTrace(logs, 'Val', Qs('@received -> "Token":' token '"Registry Name":' registryName))
+  return dsResolveToken(token, 'value', registryName, logs: $logs)
+
+// Var(token: string, fallback?: any, logs?: string): CSS var(--ds-token [, fallback])
+Var(token, fallback = null, logs = '')
+  $logs = dsTrace(logs, 'Var', Qs('@received -> "Token":' token (fallback != null ? Qs('"Fallback":' fallback) : '')))
+  return dsResolveToken(token, 'var-ref', 'default', fallback, $logs)
+
+// UseVar(token: string, value: any, mode?: 'set' | 'overwrite', logs?: string): CSS --ds-token: value
+UseVar(token, value, mode = 'overwrite', logs = '')
+  $logs = dsTrace(logs, 'UseVar', Qs('@received -> "Token":' token '"Value":' value '"Mode":' mode))
+  dsExpectAcceptedOption(mode, ('set' 'overwrite'), $logs)
+  if mode == 'set'
+    dsSetToken(token, value, $logs)
+  $varName = dsResolveToken(token, 'var-name', logs: $logs)
+  { $varName }: value
+
+// UseToken(token: string, cssProperty?: CSS property, logs?: string): token's CSS declarations
+UseToken(token, cssProperty = null, logs = '')
+  $logs = dsTrace(logs, 'UseToken', Qs('@received -> "Token":' token (cssProperty != null ? Qs('"CSS Property":' cssProperty) : '')))
+  $assignments = Val(token, 'assignments', $logs)
+  if cssProperty == null
+    for $property in $assignments
+      { $property }: Var(Qn(token ':' $property), logs: $logs)
+  else
+    dsExpectCssProperty(cssProperty, $logs)
+    dsExpect(cssProperty in $assignments, Qs('Property' cssProperty 'not found in assignments for token' token), $logs)
+    { cssProperty }: Var(Qn(token ':' cssProperty), logs: $logs)

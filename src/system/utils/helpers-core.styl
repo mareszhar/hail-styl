@@ -1,0 +1,185 @@
+/*
+----------------------------------------
+GUARDS
+----------------------------------------
+*/
+
+// dsIsType(value: any, type: string): boolean
+dsIsType(value, type)
+  return typeof(value) == type
+
+// dsIsString(value: any): boolean
+dsIsString(value)
+  return dsIsType(value, 'string')
+
+// dsIsUnit(value: any): boolean
+dsIsUnit(value)
+  return dsIsType(value, 'unit')
+
+// dsHasUnit(value: any, unitSuffix?: any): boolean
+dsHasUnit(value, unitSuffix = null)
+  return dsIsUnit(value) && (unitSuffix == null ? unit(value) != '' : unit(value) == Qn(unitSuffix))
+
+// dsIsUnitlessNumber(value: any): boolean
+dsIsUnitlessNumber(value)
+  return dsHasUnit(value, '')
+
+// dsIsVarName(value: any): boolean
+dsIsVarName(value)
+  return dsIsString(value) && match('^--', value)
+
+// dsIsVarReference(value: any): boolean
+dsIsVarReference(value)
+  return match('^var\(--[a-zA-Z_][a-zA-Z0-9_-]*(?:\s*,\s*.*)?\)$', Qn(value))
+
+// dsIsVar(value: any): boolean
+dsIsVar(value)
+  return dsIsVarName(value) or dsIsVarReference(value)
+
+/*
+----------------------------------------
+VALIDATORS AND RESOLVERS
+----------------------------------------
+*/
+
+// dsTrace(logs: string, utilName: string, details?: string): string
+dsTrace(logs, utilName, details = '')
+  $entry = Qn('[' utilName ']' (details != '' ? ' ' details : ''))
+  return logs == '' ? $entry : Qn(logs '\n' $entry)
+
+// dsExpect(condition: boolean, message: string, logs?: string)
+dsExpect(condition, message, logs = '')
+  if !condition
+    $fullMessage = message
+    if logs != ''
+      $fullMessage = Qn($fullMessage '\n' 'Trace:' '\n' logs)
+    error($fullMessage)
+
+// dsExpectUnit(value: CSS unit, unitSuffix?: CSS unit suffix | string, logs?: string)
+dsExpectUnit(value, unitSuffix = null, logs = '')
+  $logs = dsTrace(logs, 'dsExpectUnit', Qs('@received -> "Value":' value (unitSuffix != null ? Qs('"Unit Suffix":' unitSuffix) : '')))
+  dsExpect(dsIsUnit(value), Qs('Value "' value '" must be of type "unit".'), $logs)
+  if unitSuffix != null
+    dsExpect(dsHasUnit(value, unitSuffix), Qs('Value "' value '" must be a' (unitSuffix == '' ? 'unitless' : unitSuffix) 'unit.'), $logs)
+
+// dsExpectUnitlessNumber(value: number, logs?: string)
+dsExpectUnitlessNumber(value, logs = '')
+  $logs = dsTrace(logs, 'dsExpectUnitlessNumber', Qs('@received -> "Value":' value))
+  dsExpectUnit(value, '', $logs)
+
+// dsExpectMinMax(min: number, max: number, logs?: string)
+dsExpectMinMax(min, max, logs = '')
+  $logs = dsTrace(logs, 'dsExpectMinMax', Qs('@received -> "Min":' min '"Max":' max))
+  dsExpectUnitlessNumber(min, $logs)
+  dsExpectUnitlessNumber(max, $logs)
+  dsExpect(min < max, Qs('Min "' min '" must be < Max "' max '".'), $logs)
+
+// dsExpectNumberInRange(n: number, min: number, max: number, logs?: string)
+dsExpectNumberInRange(n, min, max, logs = '')
+  $logs = dsTrace(logs, 'dsExpectNumberInRange', Qs('@received -> "Number:"' n 'Range Min:"' min 'Range Max:"' max))
+  dsExpectUnitlessNumber(n, $logs)
+  dsExpectMinMax(min, max, $logs)
+  dsExpect(n >= min and n <= max, Qs('Number "' n '" must be between Range Min "' min '" and Range Max "' max '" (inclusive).'), $logs)
+
+// dsExpectFactor(factor: Factor, logs?: string)
+dsExpectFactor(factor, logs = '')
+  $logs = dsTrace(logs, 'dsExpectFactor', Qs('@received -> "Factor":' factor))
+  dsExpectNumberInRange(factor, 0, 1, $logs)
+
+// dsExpectRelativeFactor(relativeFactor: RelativeFactor, logs?: string)
+dsExpectRelativeFactor(relativeFactor, logs = '')
+  $logs = dsTrace(logs, 'dsExpectRelativeFactor', Qs('@received -> "Relative Factor":' relativeFactor))
+  dsExpectNumberInRange(relativeFactor, -1, 1, $logs)
+
+// dsExpectPositiveNumber(n: number, logs?: string)
+dsExpectPositiveNumber(n, logs = '')
+  $logs = dsTrace(logs, 'dsExpectPositiveNumber', Qs('@received -> "Number":' n))
+  dsExpectUnitlessNumber(n, $logs)
+  dsExpect(n > 0, Qs('Number "' n '" must be greater than 0.'), $logs)
+
+// dsExpectString(value: string, logs?: string)
+dsExpectString(value, logs = '')
+  $logs = dsTrace(logs, 'dsExpectString', Qs('@received -> "Value":' value))
+  dsExpect(dsIsString(value), Qs('Value "' value '" must be a string.'), $logs)
+
+// dsExpectPatternMatch(value: string, pattern: string, patternDemo?: string, logs?: string)
+dsExpectPatternMatch(value, pattern, patternDemo = null, logs = '')
+  $logs = dsTrace(logs, 'dsExpectPatternMatch', Qs('@received -> "Value":' value 'Pattern:"' pattern (patternDemo != null ? Qs('"Pattern Demo":' patternDemo) : '')))
+  dsExpectString(value, $logs)
+  dsExpect(match(pattern, value), Qs('Value "' value '" must match Pattern "' pattern '".' (patternDemo != null ? Qs('See Pattern Demo "' patternDemo '".') : '')), $logs)
+
+// dsExpectCssProperty(cssProperty: string | CSS property, logs?: string)
+dsExpectCssProperty(cssProperty, logs = '')
+  $logs = dsTrace(logs, 'dsExpectCssProperty', Qs('@received -> "CSS property":' cssProperty))
+  dsExpectPatternMatch(cssProperty, '^(--|-?[a-z])[a-z0-9-]*$', 'css-property or --custom-property or -vendor-prefix-property', $logs)
+
+// dsExpectAcceptedOption(option: any, acceptedOptions: list, logs?: string)
+dsExpectAcceptedOption(option, acceptedOptions, logs = '')
+  $logs = dsTrace(logs, 'dsExpectAcceptedOption', Qs('@received -> "Option:"' option '"Accepted Options":' acceptedOptions))
+  dsExpect(option in acceptedOptions, Qs('Option "' option '" must be one of Accepted Options: ' acceptedOptions), $logs)
+
+// dsExpectRegistryName(registryName?: RegistryName, logs?: string)
+dsExpectRegistryName(registryName = 'default', logs = '')
+  $logs = dsTrace(logs, 'dsExpectRegistryName', Qs('@received -> "Registry Name":' registryName))
+  dsExpectAcceptedOption(registryName, ('default' 'assignments'), $logs)
+
+// dsResolveRegistry(registryName?: RegistryName, logs?: string): Object<TokenRegistry>
+dsResolveRegistry(registryName = 'default', logs = '')
+  $logs = dsTrace(logs, 'dsResolveRegistry', Qs('@received -> "Registry Name":' registryName))
+  dsExpectRegistryName(registryName, $logs)
+  return registryName == 'assignments' ? $dsTokenAssignments : $dsTokens
+
+// dsExpectTokenFormat(token: string, registryName?: RegistryName, logs?: string)
+dsExpectTokenFormat(token, registryName = 'default', logs = '')
+  $logs = dsTrace(logs, 'dsExpectTokenFormat', Qs('@received -> "Token":' token '"Registry Name":' registryName))
+  dsExpectRegistryName(registryName, $logs)
+  if registryName == 'assignments'
+    dsExpectPatternMatch(token, $dsAssignmentTokenRegex, '"domain:name"', $logs)
+  else
+    dsExpectPatternMatch(token, $dsDefaultTokenRegex, '"domain:name" or "domain:name:suffix"', $logs)
+  if $dsAllowedDomainRegex != null
+    dsExpectPatternMatch(token, $dsAllowedDomainRegex, $dsAllowedDomainDemo, $logs)
+
+// dsExpectTokenStatus(token: string, expectedStatus: 'new' | 'known', registryName?: RegistryName, logs?: string)
+dsExpectTokenStatus(token, expectedStatus, registryName = 'default', logs = '')
+  $logs = dsTrace(logs, 'dsExpectTokenStatus', Qs('@received -> "Token":' token '"Expected Status":' expectedStatus '"Registry Name":' registryName))
+  dsExpectTokenFormat(token, registryName, $logs)
+  dsExpectAcceptedOption(expectedStatus, ('new' 'known'), $logs)
+  $registry = dsResolveRegistry(registryName, $logs)
+  $condition = expectedStatus == 'new' ? !(token in $registry) : (token in $registry)
+  dsExpect($condition, Qs('Token "' token '" expected to have status "' expectedStatus '" in registry "' registryName '"'), $logs)
+
+// dsResolveToken(token: string, mode: 'var-name' | 'var-ref' | 'value', registryName?: RegistryName, fallback?: any, logs?: string): CSS --ds-token | CSS var(--ds-token) | value (any)
+dsResolveToken(token, mode, registryName = 'default', fallback = null, logs = '')
+  $logs = dsTrace(logs, 'dsResolveToken', Qs('@received -> "Token":' token '"Mode":' mode '"Registry Name":' registryName '"Fallback":' fallback))
+  dsExpectTokenStatus(token, 'known', registryName, $logs)
+  dsExpectAcceptedOption(mode, ('var-name' 'var-ref' 'value'), $logs)
+  if mode == 'value'
+    $registry = dsResolveRegistry(registryName, $logs)
+    return $registry[token]
+  $varName = Uqn($dsVarNamePrefix join('-', split(':', token)))
+  if mode == 'var-name'
+    return $varName
+  return fallback != null ? Uqn('var(' $varName ', ' fallback ')') : Uqn('var(' $varName ')')
+
+// dsResolveToVarRef(tokenOrVar: string, logs?: string): CSS var(--ds-token) | CSS var(--custom-var) | string
+dsResolveToVarRef(tokenOrVar, logs = '')
+  $logs = dsTrace(logs, 'dsResolveToVarRef', Qs('@received -> "Token or Var":' tokenOrVar))
+  if dsIsVarName(tokenOrVar)
+    return Uqn('var(' tokenOrVar ')')
+  if dsIsVarReference(tokenOrVar)
+    return Uqn(tokenOrVar)
+  return dsResolveToken(tokenOrVar, 'var-ref', logs: $logs)
+
+// dsResolveTokenSegment(token: string, segment: Segment, required?: boolean, logs?: string): string | null
+dsResolveTokenSegment(token, segment, required = true, logs = '')
+  $logs = dsTrace(logs, 'dsResolveTokenSegment', Qs('@received -> "Token":' token '"Segment":' segment '"Required":' required))
+  dsExpectTokenFormat(token, logs: $logs)
+  dsExpectAcceptedOption(segment, ('domain' 'name' 'suffix'), $logs)
+  $segmentIndices = { domain: 0, name: 1, suffix: 2 }
+  $segments = split(':', token)
+  $targetIndex = $segmentIndices[segment]
+  if length($segments) > $targetIndex
+    return $segments[$targetIndex]
+  dsExpect(not required, Qs('Token "' token '" missing required segment "' segment '"'), $logs)
+  return null

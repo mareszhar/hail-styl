@@ -1,0 +1,47 @@
+/*
+----------------------------------------
+SYSTEM CONFIGURATION
+----------------------------------------
+*/
+
+$dsPrefix ?= 'hail'
+$dsVarNamePrefix ?= Qn('--' $dsPrefix '-')
+$dsAttrPrefix ?= Qn('data-' $dsPrefix '-')
+$dsShouldPreventTokenOverwrites ?= true
+
+/*
+----------------------------------------
+TOKEN REGISTRY
+----------------------------------------
+*/
+
+// pattern: only lowercase letters, numbers, and hyphens.
+$dsTokenSegmentRegex ?= '[a-z0-9]+(-[a-z0-9]+)*'
+$dsDefaultTokenDemo ?= '"domain:name" or "domain:name:suffix"'
+$dsDefaultTokenRegex ?= Qn('^' $dsTokenSegmentRegex ':' $dsTokenSegmentRegex '(:' $dsTokenSegmentRegex ')?$')
+$dsAssignmentTokenDemo ?= '"domain:name"'
+$dsAssignmentTokenRegex ?= Qn('^' $dsTokenSegmentRegex ':' $dsTokenSegmentRegex '$')
+$dsAllowedDomainRegex ?= Qn('^(space|sr|color|cr|text|tr|dr-' $dsTokenSegmentRegex '):')
+$dsAllowedDomainDemo ?= '"space:name" or "sr:name" or "color:name" or "cr:name" or "text:name" or "tr:name" or "dr-name"'
+
+$dsTokens ?= {
+  // tokens follow default token pattern
+  // 'domain:name:[suffix]': value
+}
+
+$dsTokenAssignments ?= {
+  // tokens follow assignments token pattern
+  // 'domain:name': CSS declarations object
+}
+
+/*
+----------------------------------------
+CSS RULE REGISTRY
+----------------------------------------
+*/
+
+$dsLayers ?= ('reset' 'base') // flushing order for layered mixins
+
+// RulesRegistry = { emitter: Mixin, scoping: 'scoped' | 'unscoped', layer: Layer }[]
+$dsRules ?= ({ layer: 'never-used' } { layer: 'never-used' })
+// ...initialized with two dummy items to prevent stylus bug (https://codepen.io/mareszhar/pen/azmKzQN)

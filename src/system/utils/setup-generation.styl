@@ -1,0 +1,22 @@
+dsUseGenerateTokenVarDeclarations(scope)
+  { scope }
+    for token, value in $dsTokens
+      if value != null // allows registering tokens without outputting a CSS var declaration
+        { dsResolveToken(token, 'var-name') }: value
+
+dsUseFlushRules(layer, scoping)
+  for $rule in $dsRules
+    if $rule.layer == layer and $rule.scoping == scoping
+      $emitter = $rule.emitter
+      $emitter()
+
+dsUseGenerateRuleDeclarations(scope)
+  for $layer in $dsLayers
+    dsUseFlushRules($layer, 'unscoped')
+    { scope }
+      dsUseFlushRules($layer, 'scoped')
+
+// You may scope declarations as needed, but must not call this inside any selector.
+dsUseGenerateDeclarationsAtTopLevel(tokensScope = ':root', rulesScope = ':root', )
+  dsUseGenerateTokenVarDeclarations(tokensScope)
+  dsUseGenerateRuleDeclarations(rulesScope)

@@ -1,0 +1,27 @@
+/*
+ * Produces a contrasting color and background-color declaration pair.
+ * @param {'bg' | 'txt'} against - The base element to contrast against.
+ * @param {CSS color | TokenOrVar} againstColor - The color of that base element.
+ * @param {Factor}? contrastPivotL - Contrasting color will be white for base colors darker than this l
+ * @param {string}? logs - Debugging logs or message
+ * @return {CSS} CSS declarations for background-color and color with contrasting values
+*/
+UseContrast(against, againstColor, contrastPivotL = null, logs = '')
+  $logs = dsTrace(logs, 'UseContrast', Qs('@received -> "Against":' against '"Against Color":' againstColor '"Contrast Pivot L":' (contrastPivotL == null ? 'default' : contrastPivotL)))
+  dsExpectAcceptedOption(against, 'bg' 'txt', $logs)
+  $pivotL = Var('color:control:contrast-pivot-l', logs: $logs)
+  if contrastPivotL != null
+    $pivotL = Factor(contrastPivotL, $logs)
+  $baseColor = typeof(againstColor) == 'rgba' ? againstColor : dsResolveToVarRef(againstColor, $logs)
+  // Generate a binary contrast color (black or white) by forcing lightness to clamp.
+  // The extreme multiplier (-1000) pushes the calculation to the absolute range limits:
+  // - Lighter than pivot (currentL > pivotL): Large negative value, clamped to 0 (Black).
+  // - Darker than pivot (currentL < pivotL): Large positive value, clamped to 1 (White).
+  // Formula: contrastL = (currentL - pivotL) * -1000
+  $contrastingColor = Oklch('from' $baseColor Calc('(l -' $pivotL ') * -1000') 0.04 'h')
+  if against == 'bg'
+    background-color: $baseColor
+    color: $contrastingColor
+  else if against == 'txt'
+    background-color: $contrastingColor
+    color: $baseColor

@@ -1,0 +1,52 @@
+// dsSetToken(token: string, value: CSS, logs?: string)
+dsSetToken(token, value, logs = '')
+  $logs = dsTrace(logs, 'dsSetToken', Qs('@received -> "Token":' token '"Value":' value))
+  if $dsShouldPreventTokenOverwrites
+    dsExpectTokenStatus(token, 'new', 'default', $logs)
+  $dsTokens[token] = value
+
+// dsSetTokenAssignment(token: string, cssProperty: CSS property | string, value: CSS, logs?: string)
+dsSetTokenAssignment(token, cssProperty, value, logs = '')
+  $logs = dsTrace(logs, 'dsSetTokenAssignment', Qs('@received -> "Token":' token '"CSS Property":' cssProperty '"Value":' value))
+  dsExpectTokenFormat(token, 'assignments', $logs)
+  dsExpectCssProperty(cssProperty, $logs)
+  if !(token in $dsTokenAssignments)
+    $dsTokenAssignments[token] = {}
+  if $dsShouldPreventTokenOverwrites
+    dsExpect(!(cssProperty in $dsTokenAssignments[token]), Qs('CSS Property "' cssProperty '" is already assigned to token "' token '".'), $logs)
+  $dsTokenAssignments[token][cssProperty] = value
+  dsSetToken(Qn(token ':' cssProperty), value, $logs)
+
+// dsSetTokenAssignments(token: string, assignments: Object<CSS Property, any>, logs?: string)
+dsSetTokenAssignments(token, assignments, logs = '')
+  $logs = dsTrace(logs, 'dsSetTokenAssignments', Qs('@received -> "Token":' token '"Assignments":' assignments))
+  for property, value in assignments
+    dsSetTokenAssignment(token, property, value, $logs)
+
+// dsSetFactorToken(token: string, factor: Factor, logs?: string)
+dsSetFactorToken(token, factor, logs = '')
+  $logs = dsTrace(logs, 'dsSetFactorToken', Qs('@received -> "Token":' token '"Factor":' factor))
+  dsExpectFactor(factor, $logs)
+  dsSetToken(token, factor, $logs)
+
+// dsSetMinMaxTokens(minToken: string, minValue: number, maxToken: string, maxValue: number, logs?: string)
+dsSetMinMaxTokens(minToken, minValue, maxToken, maxValue, logs = '')
+  $logs = dsTrace(logs, 'dsSetMinMaxTokens', Qs('@received -> "Min Token":' minToken '"Min Value":' minValue '"Max Token":' maxToken '"Max Value":' maxValue))
+  dsExpectMinMax(minValue, maxValue, $logs)
+  dsSetToken(minToken, minValue, $logs)
+  dsSetToken(maxToken, maxValue, $logs)
+
+// dsSetFactorMinMaxTokens(minToken: string, minFactor: Factor, maxToken: string, maxFactor: Factor, logs?: string)
+dsSetFactorMinMaxTokens(minToken, minFactor, maxToken, maxFactor, logs = '')
+  $logs = dsTrace(logs, 'dsSetFactorMinMaxTokens', Qs('@received -> "Min Token":' minToken '"Min Factor":' minFactor '"Max Token":' maxToken '"Max Factor":' maxFactor))
+  dsExpectFactor(minFactor, $logs)
+  dsExpectFactor(maxFactor, $logs)
+  dsSetMinMaxTokens(minToken, minFactor, maxToken, maxFactor, $logs)
+
+// dsAddRule(emitter: Mixin, scoping: 'scoped' | 'unscoped', layer: Layer, logs?: string)
+dsAddRule(emitter, scoping = 'scoped', layer = 'base', logs = '')
+  // NOTE: due to stylus' limitations, it's impossible to define the emitter mixin inline. define it first, then pass it as an arg.
+  $logs = dsTrace(logs, 'dsAddRule', Qs('@received -> "Emitter":' emitter '"Scoping":' scoping '"Layer":' layer))
+  dsExpectAcceptedOption(layer, $dsLayers, $logs)
+  dsExpectAcceptedOption(scoping, ('scoped' 'unscoped'), $logs)
+  push($dsRules, { 'layer': layer, 'scoping': scoping, 'emitter': emitter })

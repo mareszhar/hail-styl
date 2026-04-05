@@ -1,0 +1,265 @@
+if $dsIgnoreStarterPreset is not true
+
+  /*
+  ----------------------------------------
+  RESETS PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreResetsPreset is not true
+
+    _emitter()
+      // apply a natural box layout model to all elements
+      &,
+      &::before,
+      &::after,
+      & *,
+      & *::before,
+      & *::after
+        box-sizing: border-box
+        margin: 0
+        padding: 0
+
+      // smooth scrolling for anchor links
+      &
+        scroll-behavior: smooth
+
+      // remove default list styles
+      & ul,
+      & ol,
+      & li
+        list-style: none
+
+      // responsive images and videos
+      & img,
+      & picture,
+      & video,
+      & iframe
+        display: block
+        max-width: 100%
+        height: auto
+
+      // form elements reset
+      & input,
+      & textarea,
+      & select,
+      & button
+        border: none
+        outline: none
+        background: none
+        font: inherit
+        color: inherit
+        line-height: inherit
+        letter-spacing: inherit
+
+        // remove default browser styling
+        -webkit-appearance: none
+        -moz-appearance: none
+        appearance: none
+
+      // pointer cursor for clickable elements
+      & button,
+      & [type='button'],
+      & [type='reset'],
+      & [type='submit'],
+      & label[for]
+        cursor: pointer
+
+      // anchor tags should not have text decoration by default
+      & a
+        text-decoration: none
+        color: inherit
+
+      // table elements should not have cell spacing or padding by default
+      & table
+        border-collapse: collapse
+        border-spacing: 0
+
+      // remove quotes from the list items
+      & blockquote,
+      & q
+        quotes: none
+
+      // reset blockquote and q before and after quotes
+      & blockquote::before,
+      & blockquote::after,
+      & q::before,
+      & q::after
+        content: ''
+        content: none
+
+      // responsive embeds
+      & embed,
+      & object
+        max-width: 100%
+
+      // remove animations for people who've turned them off
+      @media (prefers-reduced-motion: reduce)
+        &,
+        &::before,
+        &::after,
+        & *,
+        & *::before,
+        & *::after
+          animation-duration: 0.01ms !important
+          animation-iteration-count: 1 !important
+          transition-duration: 0.01ms !important
+          scroll-behavior: auto !important
+
+    dsAddRule(_emitter, 'scoped', 'reset')
+
+  /*
+  ----------------------------------------
+  SPACE STEP ROLES PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreSpaceStepRolesPreset is not true
+
+    dsSetToken('sr:1p', dsSize(0.125))
+    dsSetToken('sr:2p', dsSize(0.25))
+    dsSetToken('sr:4p', dsSize(0.5))
+    dsSetToken('sr:8p', dsSize(1))
+    dsSetToken('sr:16p', dsSize(2))
+    dsSetToken('sr:24p', dsSize(3))
+    dsSetToken('sr:32p', dsSize(4))
+    dsSetToken('sr:40p', dsSize(5))
+
+  /*
+  ----------------------------------------
+  SPACE BREAKPOINT ROLES PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreSpaceBreakpointRolesPreset is not true
+
+    dsSetToken('sr:breakpoint:mobile-s', 320px)
+    dsSetToken('sr:breakpoint:mobile-m', 375px)
+    dsSetToken('sr:breakpoint:mobile', 425px)
+    dsSetToken('sr:breakpoint:tablet', 768px)
+    dsSetToken('sr:breakpoint:desktop-s', 1024px)
+    dsSetToken('sr:breakpoint:desktop-m', 1280px)
+    dsSetToken('sr:breakpoint:desktop-l', 1536px)
+    dsSetToken('sr:breakpoint:desktop-xl', 1920px)
+    dsSetToken('sr:breakpoint:desktop-xxl', 2560px)
+
+  /*
+  ----------------------------------------
+  COLOR MONOCHROMATIC PALETTE PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreColorMonochromaticPalettePreset is not true
+
+    dsSetColorChannelToken('color:accent:h', 264)
+    dsSetColorChannelToken('color:accent:c', 1)
+    dsSetColorChannelToken('color:accent:l', 0.5)
+    dsSetToken('color:accent', Oklch(Var('color:accent:l') Var('color:accent:c') Var('color:accent:h')))
+
+    dsSetColorChannelToken('color:tinted:c', 0.2)
+    dsSetToken('color:tinted', dsColor('color:accent', cExp: 'color:tinted:c'))
+
+    dsSetColorChannelToken('color:matte:c', 0.02)
+    dsSetToken('color:matte', dsColor('color:accent', cExp: 'color:matte:c'))
+
+  /*
+  ----------------------------------------
+  COLOR BASIC ROLES PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreColorBasicRolesPreset is not true
+
+    dsSetToken('cr:primary', dsColor('color:accent', e: 0.5))
+    dsSetToken('cr:bg', dsColor('color:matte', e: 0))
+    dsSetToken('cr:txt-inverted', dsColor('color:matte', e: 0))
+    dsSetToken('cr:txt-highlighted', dsColor('color:matte', e: 1))
+    dsSetToken('cr:txt', dsColor('color:matte', e: 0.8))
+    dsSetToken('cr:txt-toned', dsColor('color:matte', e: 0.6))
+    dsSetToken('cr:txt-muted', dsColor('color:matte', e: 0.4))
+    dsSetToken('cr:txt-dimmed', dsColor('color:matte', e: 0.2))
+
+  /*
+  ----------------------------------------
+  TEXT BASIC ROLES PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreTextBasicRolesPreset is not true
+
+    dsSetTokenAssignments('tr:body', {
+      font-family: Uq('Inter, sans-serif'),
+    })
+
+  /*
+  ----------------------------------------
+  [CUSTOM DOMAIN] ICON OVERRIDES PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreIconOverridesPreset is not true
+
+    // setting to `null` will make the tokens "known" without emitting any --var declarations
+    dsSetToken('dr-icon:fill', null)
+    dsSetToken('dr-icon:stroke', null)
+    dsSetToken('dr-icon:stroke-width', null)
+    dsSetToken('dr-icon:opacity', null)
+    dsSetToken('dr-icon:animation-duration', null)
+    dsSetToken('dr-icon:transition', null)
+
+  /*
+  ----------------------------------------
+  BASIC STYLES PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreBasicStylesPreset is not true
+
+    _emitter()
+      UseToken('tr:body')
+      font-size: Var('space:control:root-font-size')
+      font-optical-sizing: auto
+      color: Var('cr:txt')
+      background: Var('cr:bg')
+    dsAddRule(_emitter)
+
+  /*
+  ----------------------------------------
+  DARK SCHEME OVERRIDES PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreDarkSchemeOverridesPreset is not true
+
+    _useDarkSchemeOverrides()
+      UseVar('color:control:most-elevated-l', Var('color:control:dark-scheme-most-elevated-l'))
+      UseVar('color:control:c-ceiling', Calc(Var('color:control:max-c') '*' Var('color:control:dark-scheme-saturation-factor')))
+    _emitter()
+      @media (prefers-color-scheme: dark)
+        :root:not([{$dsAttrPrefix}scheme='light'])
+          _useDarkSchemeOverrides()
+      :root[{$dsAttrPrefix}scheme='dark']
+        _useDarkSchemeOverrides()
+    dsAddRule(_emitter, 'unscoped')
+
+  /*
+  ----------------------------------------
+  NUXT TRANSITIONS PRESET
+  ----------------------------------------
+  */
+
+  if $dsIgnoreNuxtTransitionsPreset is not true
+
+    _emitter()
+      .page-enter-active,
+      .page-leave-active,
+      .layout-enter-active,
+      .layout-leave-active
+        transition: all 0.3s ease
+
+      .page-enter-from,
+      .page-leave-to,
+      .layout-enter-from,
+      .layout-leave-to
+        opacity: 0
+    dsAddRule(_emitter, 'unscoped')

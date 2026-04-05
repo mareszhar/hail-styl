@@ -1,0 +1,76 @@
+// dsExpectColorDependencies(scope: Scope, logs?: string)
+dsExpectColorDependencies(scope, logs = '')
+  $logs = dsTrace(logs, 'dsExpectColorDependencies', Qs('@received -> "Scope":' scope))
+  $scopes = 'e' 'l' 'c' 'h' 'a' 'slashAlpha' 'contrast'
+  dsExpectAcceptedOption(scope, $scopes, $logs)
+  if scope == 'e'
+    dsExpectTokenStatus('color:control:most-elevated-l', 'known', 'default', $logs)
+  if scope == 'l' or scope == 'e'
+    dsExpectTokenStatus('color:control:min-l', 'known', 'default', $logs)
+    dsExpectTokenStatus('color:control:max-l', 'known', 'default', $logs)
+    dsExpectTokenStatus('color:control:l-range', 'known', 'default', $logs)
+  if scope == 'c'
+    dsExpectTokenStatus('color:control:min-c', 'known', 'default', $logs)
+    dsExpectTokenStatus('color:control:max-c', 'known', 'default', $logs)
+    dsExpectTokenStatus('color:control:c-ceiling', 'known', 'default', $logs)
+    dsExpectTokenStatus('color:control:c-range', 'known', 'default', $logs)
+  if scope == 'contrast'
+    dsExpectTokenStatus('color:control:contrast-pivot-l', 'known', 'default', $logs)
+
+// dsResolveExplicitChannel(channel: Channel, value: number | TokenOrVar, logs?: string): number | CSS var()
+dsResolveExplicitChannel(channel, value, logs = '')
+  $logs = dsTrace(logs, 'dsResolveExplicitChannel', Qs('@received -> "Channel":' channel '"Value":' value))
+  dsExpectAcceptedOption(channel, 'l' 'c' 'h' 'a' 'slashAlpha', $logs)
+  if dsIsUnitlessNumber(value)
+    dsExpectNumberInRange(value, 0, channel == 'h' ? 360 : (channel == 'c' ? 0.4 : 1), $logs)
+    return channel == 'slashAlpha' ? Uqs('/' value) : value
+  return dsResolveToVarRef(value, $logs)
+
+// dsResolveNormalizedChannel(channel: Channel, factor: number, logs?: string): CSS calc()
+dsResolveNormalizedChannel(channel, factor, logs = '')
+  $logs = dsTrace(logs, 'dsResolveNormalizedChannel', Qs('@received -> "Channel":' channel '"Factor":' factor))
+  dsExpectAcceptedOption(channel, 'e' 'l' 'c', $logs)
+  dsExpectFactor(factor, $logs)
+  dsExpectColorDependencies(channel, $logs)
+  if channel == 'e'
+    // A higher elevation should result in a darker color in light scheme and a lighter color in dark scheme
+    // Formula: L = minL + lRange * ((1 - factor) + mostElevatedL * (2 * factor - 1))
+    // The inner expression flips the interpolation direction based on the scheme:
+    // - Light scheme (mostElevatedL = 0): Resolves to `1 - factor` (higher elevation = darker color)
+    // - Dark scheme (mostElevatedL = 1): Resolves to `factor` (higher elevation = lighter color)
+    return Calc(Var('color:control:min-l', logs: $logs) '+' Var('color:control:l-range', logs: $logs) '* (' Precise(1 - factor) '+' Var('color:control:most-elevated-l', logs: $logs) '*' Precise(2 * factor - 1) ')')
+  // Formula: channelValue = min + range * factor
+  return Calc(Var(Qn('color:control:min-' channel), logs: $logs) '+' Var(Qn('color:control:' channel '-range'), logs: $logs) '*' factor)
+
+// dsResolveRelativeChannel(channel: Channel, delta: number, logs?: string): CSS calc()
+dsResolveRelativeChannel(channel, delta, logs = '')
+  $logs = dsTrace(logs, 'dsResolveRelativeChannel', Qs('@received -> "Channel":' channel '"Delta":' delta))
+  dsExpectAcceptedOption(channel, 'e' 'l' 'c' 'h' 'slashAlpha', $logs)
+  dsExpectNumberInRange(delta, channel == 'h' ? -360 : -1, channel == 'h' ? 360 : 1, $logs)
+  dsExpectColorDependencies(channel, $logs)
+  if channel == 'h' or channel == 'slashAlpha'
+    $formula = Calc(channel '+' delta)
+    return channel == 'slashAlpha' ? Uqs('/' $formula) : $formula
+  if channel == 'e'
+    // An increase in elevation should make the color darker in light scheme and lighter in dark scheme
+    // Formula: newL = currentL + (lRange * delta * directionMultiplier)
+    // The (2 * mostElevatedL - 1) expression acts as a scheme-aware direction multiplier:
+    // - Light scheme (mostElevatedL = 0): Multiplier is -1 (higher elevation = darker color)
+    // - Dark scheme (mostElevatedL = 1): Multiplier is +1 (higher elevation = lighter color)
+    return Calc('l +' Var('color:control:l-range', logs: $logs) '*' delta '* (2 *' Var('color:control:most-elevated-l', logs: $logs) '- 1)')
+  // Formula: newChannelValue = currentChannelValue + range * delta
+  return Calc(channel '+' Var(Qn('color:control:' channel '-range'), logs: $logs) '*' delta)
+
+// dsResolveColorChannel(channel: Channel, expVal?: number | TokenOrVar, normVal?: number, relVal?: number, logs?: string): CSS var() | number | CSS calc() | CSS OKLCH channel
+dsResolveColorChannel(channel, expVal = null, normVal = null, relVal = null, logs = '')
+  $logs = dsTrace(logs, 'dsResolveColorChannel', Qs('@received -> "Channel":' channel '"Explicit Value":' expVal '"Normalized Value":' normVal '"Relative Value":' relVal))
+  dsExpectAcceptedOption(channel, 'e' 'l' 'c' 'h' 'slashAlpha', $logs)
+  if expVal != null
+    return dsResolveExplicitChannel(channel, expVal, $logs)
+  else if normVal != null
+    return dsResolveNormalizedChannel(channel, normVal, $logs)
+  else if relVal != null
+    return dsResolveRelativeChannel(channel, relVal, $logs)
+  else
+    dsExpect(channel != 'e', 'Explicit, normalized, or relative value must be provided for elevation channel', $logs)
+    return channel == 'slashAlpha' ? '' : channel // we only include alpha channel if it was defined/modified

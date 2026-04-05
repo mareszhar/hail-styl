@@ -1,0 +1,28 @@
+// dsResolveSizeBase(step: unit, base?: number | TokenOrVar, logs?: string): number | CSS var()
+dsResolveSizeBase(step, base, logs = '')
+  $logs = dsTrace(logs, 'dsResolveSizeBase', Qs('@received -> "Step":' step '"Base":' (base != null ? base : 'auto')))
+  if base != null
+    if dsIsUnit(base)
+      dsExpectUnitlessNumber(base, $logs)
+      return base
+    return dsResolveToVarRef(base, $logs)
+  dsExpectUnit(step, logs: $logs)
+  if dsHasUnit(step, 'bem')
+    return Var('space:control:bem', logs: $logs)
+  return Var('space:control:base-size', logs: $logs)
+
+// dsResolveSizeStep(step: unit, logs?: string): number
+dsResolveSizeStep(step, logs = '')
+  $logs = dsTrace(logs, 'dsResolveSizeStep', Qs('@received -> "Step":' step))
+  dsExpectUnit(step, logs: $logs)
+  dsExpect(!dsHasUnit(step, 'rem'), Qs('Step "' step '" should not use "rem" unit. Use "bem" suffix for rem-sensitive base-scaled sizes, or use "rem" directly without "dsSize".'), $logs)
+  if dsHasUnit(step, 'bem')
+    return unit(step, '') // return unitless number ("bem" var will make output rem-based)
+  return step
+
+// dsResolveSizeUnitSuffix(step: unit, base?: any, logs?: string): CSS | empty
+dsResolveSizeUnitSuffix(step, base, logs = '')
+  $logs = dsTrace(logs, 'dsResolveSizeUnitSuffix', Qs('@received -> "Step":' step '"Base":' (base != null ? base : 'auto')))
+  if base == null && dsIsUnitlessNumber(step)
+    return Uqs('*' 1px)
+  return Uq('') // return empty instead of null to avoid 'null' string in calc

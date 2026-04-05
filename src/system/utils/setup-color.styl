@@ -1,0 +1,51 @@
+// dsChannel(channel: Channel, value: number | TokenOrVar, mode?: 'auto' | 'normalized' | 'explicit', logs?: string): number | CSS var() | CSS calc()
+dsChannel(channel, value, mode = 'auto', logs = '')
+  $logs = dsTrace(logs, 'dsChannel', Qs('@received -> "Channel":' channel '"Value":' value) '"Mode":' mode)
+  dsExpectAcceptedOption(channel, 'e' 'l' 'c' 'h' 'a' 'slashAlpha', $logs)
+  dsExpectAcceptedOption(mode, 'auto' 'normalized' 'explicit', $logs)
+  if mode == 'explicit' or (mode == 'auto' && (dsIsVar(value) or channel in ('h' 'a' 'slashAlpha')))
+    return dsResolveExplicitChannel(channel, value, $logs)
+  return dsResolveNormalizedChannel(channel, value, $logs)
+
+// dsSetColorChannelToken(token: string, value: number | TokenOrVar, logs?: string)
+dsSetColorChannelToken(token, value, logs = '')
+  $logs = dsTrace(logs, 'dsSetColorChannelToken', Qs('@received -> "Token":' token '"Value":' value))
+  dsExpectTokenFormat(token, 'default', $logs)
+  $channel = dsResolveTokenSegment(token, 'suffix', logs: $logs)
+  dsExpectAcceptedOption($channel, 'l' 'c' 'h' 'a', $logs)
+  dsSetToken(token, dsChannel($channel, value, 'auto', $logs), $logs)
+
+/**
+ * Define a color based off another. Supports granular adjustments to each channel.
+ * @param {TokenOrVar} base - The base color token or variable to adjust
+ * @param {Factor}? e - Normalized elevation
+ * @param {Factor}? l - Normalized lightness
+ * @param {Factor}? c - Normalized chroma
+ * @param {Hue | TokenOrVar}? h - Explicit hue
+ * @param {Factor | TokenOrVar}? a - Explicit alpha (used as 'slashAlpha' in `oklc(from... / a)` notation)
+ * @param {RelativeFactor}? eRel - Relative elevation delta in [-1, 1]
+ * @param {RelativeFactor}? lRel - Relative lightness delta in [-1, 1]
+ * @param {RelativeFactor}? cRel - Relative chroma delta in [-1, 1]
+ * @param {RelativeHue}? hRel - Relative hue delta in [-360, 360]
+ * @param {RelativeFactor}? aRel - Relative alpha ('slashAlpha') delta in [-1, 1]
+ * @param {Factor | TokenOrVar}? lExp - Explicit lightness
+ * @param {Factor | TokenOrVar}? cExp - Explicit chroma
+ * @param {string}? logs - Optional logs or message for debugging
+ * @return {CSS} Color value using relative oklch syntax when needed
+*/
+
+dsColor(base, e = null, l = null, c = null, h = null, a = null, eRel = null, lRel = null, cRel = null, hRel = null, aRel = null, lExp = null, cExp = null, logs = '')
+  $logs = dsTrace(logs, 'dsColor', Qs('@received -> "Base":' base '"Explicit L":' lExp '"Explicit C":' cExp '"Explicit H":' h '"Explicit A":' a '"Normalized E":' e '"Normalized L":' l '"Normalized C":' c '"Relative E":' eRel '"Relative L":' lRel '"Relative C":' cRel '"Relative H":' hRel '"Relative A":' aRel))
+  $baseVar = dsResolveToVarRef(base, $logs)
+  $hasOverrides = e != null or l != null or c != null or h != null or a != null or eRel != null or lRel != null or cRel != null or hRel != null or aRel != null or lExp != null or cExp != null
+  if !$hasOverrides
+    return $baseVar
+  // dsResolveColorChannel follows signature: channel, explicitValue, normalizedValue, relativeValue
+  $hasElevationOverrides = e != null or eRel != null
+  $l = ($hasElevationOverrides \
+        ? dsResolveColorChannel('e', null, e, eRel, $logs) \
+        : dsResolveColorChannel('l', lExp, l, lRel, $logs))
+  $c = dsResolveColorChannel('c', cExp, c, cRel, $logs)
+  $h = dsResolveColorChannel('h', h, null, hRel, $logs)
+  $slashAlpha = dsResolveColorChannel('slashAlpha', a, null, aRel, $logs)
+  return Oklch('from' $baseVar $l $c $h $slashAlpha)

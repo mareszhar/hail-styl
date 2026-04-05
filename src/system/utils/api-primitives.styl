@@ -1,0 +1,63 @@
+// Join(delimiter, args): string
+// @example Join('-', 'a' 'b' 'c') -> 'a-b-c'
+Join(delimiter, collection)
+  $collectionIsLikelyWrappedList = length(collection) == 1
+  $unwrappedList = $collectionIsLikelyWrappedList ? collection[0] : collection
+  return join(delimiter, $unwrappedList)
+
+// Uq(value): CSS
+// @example: Uq($token)
+Uq(value)
+  if typeof(value) in ('string' 'ident' 'literal')
+    return unquote(value)
+  return value
+
+// Uqn(args...): CSS
+// @example: Uqn('var(' $token ')')
+Uqn(args...)
+  return Uq(Join('', args))
+
+// Uqs(args...): CSS
+// @example: Uqs('/' $alpha)
+Uqs(args...)
+  return Uq(Join(' ', args))
+
+// Qn(args...): string
+// @example: Qn($domain ':' $name ':' $suffix)
+Qn(args...)
+  return Join('', args)
+
+// Qs(args...): string
+// @example: Qs('max "' $limit '" must be larger than "' $baseline '"')
+Qs(args...)
+  return Join(' ', args)
+
+// Calc(args...): CSS calc() expression
+// @example: Calc(100% '-' $size)
+Calc(args...)
+  return Uqn('calc(' Join(' ', args) ')')
+
+// Clamp(args...): CSS clamp() expression
+// @example: Clamp(1rem, 2vw, $limit)
+Clamp(args...)
+  return Uqn('clamp(' Join(', ', args) ')')
+
+// Min(args...): CSS min() expression
+// @example: Min(40px, $size)
+Min(args...)
+  return Uqn('min(' Join(', ', args) ')')
+
+// Max(args...): CSS max() expression
+// @example: Max($size, 2vw)
+Max(args...)
+  return Uqn('max(' Join(', ', args) ')')
+
+// Oklch(args...): CSS oklch() expression
+// @example: Oklch(0.7 0.2 264)
+Oklch(args...)
+  return Uqn('oklch(' Join(' ', args) ')')
+
+// Precise(value): number
+// @example: Precise(1 - 0.3)
+Precise(value)
+  return round(value * 10000) / 10000

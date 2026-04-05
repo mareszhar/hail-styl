@@ -1,0 +1,39 @@
+/*
+----------------------------------------
+[OPTIONAL]: CONFIG HAIL
+----------------------------------------
+*/
+
+$dsPrefix = 'hail-demo'
+$dsIgnoreResetsPreset = true
+
+/*
+----------------------------------------
+IMPORT HAIL
+----------------------------------------
+*/
+
+@import '../src/index.styl'
+// PS: it's also possible to import `index-system` and `index-design` separately to do something in between.
+
+/*
+----------------------------------------
+[OPTIONAL]: CUSTOMIZE & EXTEND HAIL
+----------------------------------------
+*/
+
+// customize...
+
+$dsShouldPreventTokenOverwrites = false
+
+dsSetColorChannelToken('color:accent:h', 164)
+dsSetToken('cr:bg', dsColor('color:matte', e: 0.1, cRel: 0.4))
+dsSetToken('cr:primary', dsColor('color:accent', e: 0.7, cRel: -0.2))
+
+$dsShouldPreventTokenOverwrites = true
+
+// extend...
+
+body
+  border: Var('sr:1p') solid Var('cr:primary')
+  padding: Var('sr:8p')
