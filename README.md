@@ -19,7 +19,14 @@ The typical setup has four steps, split across two locations:
 ```stylus
 // 1. [Optional] Configure hail BEFORE importing
 $dsPrefix = 'my-app'             // changes CSS variable prefix (default: 'hail')
-$dsIgnoreResetsPreset = true     // example opt-out (see docs for all opt-outs)
+
+// $dsPresets controls which starter presets to include.
+// mode: 'opt-out' includes everything EXCEPT the listed presets.
+// mode: 'opt-in' includes ONLY the listed presets.
+$dsPresets = {
+  mode: 'opt-out',
+  listed: ('resets')
+}
 
 // 2. Import hail
 @import '@mszr/hail-styl'
@@ -54,6 +61,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         stylus: {
+          paths: [path.resolve(process.cwd(), 'node_modules')],
           additionalData: `@import '${path.resolve(process.cwd(), './design-system.styl')}'`,
         },
       },

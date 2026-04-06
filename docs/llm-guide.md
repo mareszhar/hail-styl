@@ -14,12 +14,17 @@ A Stylus design system engine. You define **tokens** (named design values) and *
 
 ```stylus
 // 1. [Optional] configure before import
+
 $dsPrefix = 'my-app'
 
 // 2. Import the engine
+// NOTE: Make sure your build tool is configured to resolve imports from node_modules
+// (e.g. in vite: add `paths: [path.resolve(process.cwd(), 'node_modules')]` to `css.preprocessorOptions.stylus`)
+
 @import '@mszr/hail-styl'
 
 // 3. Define your tokens & rules anywhere (after import, before flush)
+
 dsSetToken('cr:surface', dsColor('color:matte', e: 0.2))
 _emitter()
   body
@@ -27,7 +32,8 @@ _emitter()
 dsAddRule(_emitter)
 
 // 4. Flush ONCE at top level 
-// NOTE: call this in a stylus block in app.vue, or somewhere that is only consumed **once**
+// Call this in a stylus block in app.vue, or somewhere that is only consumed **once**
+
 dsUseGenerateDeclarationsAtTopLevel()
 ```
 
@@ -204,11 +210,20 @@ font-size: 1rem  // no dsSize needed
 
 ---
 
-## Opt-out Presets (set before importing index-design)
+## Presets Configuration (`$dsPresets`)
 
-If you want to opt-out of the starter presets, you can set `$dsIgnoreStarterPreset` to `true` before importing `index-design`.
+Control which starter presets are included. Default mode is `opt-out` (include all *except* listed). Set mode to `opt-in` to ignore all *except* listed.
 
-There are a number of other `$dsIgnore*` variables you can set to opt-out of specific presets. See the [Detailed Guide](./detailed-guide.md) for more information.
+```stylus
+// Set BEFORE importing index-design
+$dsPresets = {
+  mode: 'opt-out',
+  listed: ('resets' 'icon-overrides') // These won't be included
+}
+// To opt-out of EVERYTHING: `mode: 'opt-in', listed: ()`
+```
+
+Available presets (kebab-case): `'resets'`, `'space-step-roles'`, `'space-breakpoint-roles'`, `'color-monochromatic-palette'`, `'color-basic-roles'`, `'text-basic-roles'`, `'icon-overrides'`, `'basic-styles'`, `'dark-scheme-overrides'`, `'nuxt-transitions'`.
 
 ---
 

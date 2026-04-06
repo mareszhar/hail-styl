@@ -2,13 +2,10 @@
 
 ## Reproduction Steps
 
-1. install `hail-styl` as a dev dependency
-2. configure auto-imports (see `nuxt.config.ts` for example)
-3. run `dsUseGenerateDeclarationsAtTopLevel()` once outside any selectors. (see `app.vue` for example)
-
-## Usage
-
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+1. Install `hail-styl` as a dev dependency via `bun i -D @mszr/hail-styl`
+2. Configure auto-imports and `paths` in vite so `@import '@mszr/hail-styl'` resolves the node_module package. (see `nuxt.config.ts` for example)
+3. Import hail using `@import '@mszr/hail-styl'` in your globally auto-imported styl file. (see `design-system.styl` for example)
+4. Run `dsUseGenerateDeclarationsAtTopLevel()` exactly once outside any selectors. (see `app.vue` for example)
 
 ```bash
 # install dependencies

@@ -4,8 +4,16 @@
 ----------------------------------------
 */
 
-$dsPrefix = 'hail-demo'
-$dsIgnoreResetsPreset = true
+// example of how to change the default prefix
+
+$dsPrefix = 'hail-demo' // -> will result in vars like: --hail-demo-token-name
+
+// example of how to opt-out of a preset
+
+$dsPresets = {
+  mode: 'opt-out',
+  listed: ('resets'), // -> resets will not be included
+}
 
 /*
 ----------------------------------------
@@ -13,8 +21,8 @@ IMPORT HAIL
 ----------------------------------------
 */
 
-@import '../src/index.styl'
-// PS: it's also possible to import `index-system` and `index-design` separately to do something in between.
+@import '@mszr/hail-styl'
+// PS: it's also possible to import `@mszr/hail-styl/system` and `@mszr/hail-styl/design` separately to do something in between.
 
 /*
 ----------------------------------------

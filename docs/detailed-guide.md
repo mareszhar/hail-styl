@@ -111,6 +111,14 @@ Use this if you want to run some code between the system initialization and the 
 
 Use this when you want the engine without any of the default design tokens or presets.
 
+### Deep nested imports
+
+If you only need a single specific file/utility and want to bypass the rest of the engine, the full `src` directory is included in the package so you can target files directly:
+
+```stylus
+@import '@mszr/hail-styl/src/system/utils/api-primitives'
+```
+
 ---
 
 ## The Token System
@@ -543,23 +551,44 @@ Always use the engine's wrappers instead of Stylus/CSS built-ins to avoid quotin
 | `$dsShouldPreventTokenOverwrites` | `true` | Throw if a token is registered twice |
 | `$dsLayers` | `('reset' 'base')` | Rule flush order |
 
-### Starter Preset Opt-outs
+### Starter Presets (`$dsPresets`)
 
-Set any of these to `true` before importing `index-design.styl` to skip a preset:
+Control which starter presets are included using `$dsPresets` before importing `index-design.styl`. The `mode` can be `'opt-out'` (include all EXCEPT listed, default) or `'opt-in'` (include ONLY listed).
 
-| Variable | Skips |
+```stylus
+// Example: opt-out of resets and basic styles
+$dsPresets = {
+  mode: 'opt-out',
+  listed: ('resets' 'basic-styles')
+}
+
+// Example: opt-in to ONLY color monochromatic palette and space steps (ignore everything else)
+$dsPresets = {
+  mode: 'opt-in',
+  listed: ('color-monochromatic-palette' 'space-step-roles')
+}
+
+// Example: ignore EVERYTHING
+$dsPresets = {
+  mode: 'opt-in',
+  listed: ()
+}
+```
+
+**Available preset strings:**
+
+| Name | Controls |
 |---|---|
-| `$dsIgnoreStarterPreset` | All starter presets |
-| `$dsIgnoreResetsPreset` | CSS reset rules |
-| `$dsIgnoreSpaceStepRolesPreset` | `sr:*p` tokens |
-| `$dsIgnoreSpaceBreakpointRolesPreset` | `sr:breakpoint:*` tokens |
-| `$dsIgnoreColorMonochromaticPalettePreset` | `color:accent`, `color:tinted`, `color:matte` |
-| `$dsIgnoreColorBasicRolesPreset` | Basic color role tokens |
-| `$dsIgnoreTextBasicRolesPreset` | Basic text role tokens |
-| `$dsIgnoreIconOverridesPreset` | `dr-icon:*` tokens |
-| `$dsIgnoreBasicStylesPreset` | Basic styles |
-| `$dsIgnoreDarkSchemeOverridesPreset` | Basic dark scheme override styles |
-| `$dsIgnoreNuxtTransitionsPreset` | Basic Nuxt page and layout transition styles |
+| `'resets'` | Default CSS browser reset rules |
+| `'space-step-roles'` | `sr:*p` tokens |
+| `'space-breakpoint-roles'` | `sr:breakpoint:*` tokens |
+| `'color-monochromatic-palette'`| `color:accent`, `color:tinted`, `color:matte` |
+| `'color-basic-roles'` | Basic `cr:*` color roles |
+| `'text-basic-roles'` | Basic `tr:*` text roles |
+| `'icon-overrides'` | `dr-icon:*` known overridable tokens for `hail-nuxt`'s `BaseIcon.vue` |
+| `'basic-styles'` | Basic styles for `body` or similar entry node (depends on `color-basic-roles` and `text-basic-roles` being included. Or you could define your own before `index-design.styl` runs.) |
+| `'dark-scheme-overrides'` | Basic overrides for dark scheme flip support |
+| `'nuxt-transitions'` | Default fade transitions for Nuxt pages/layouts |
 
 ---
 
@@ -578,7 +607,10 @@ Create a single design system entry file (e.g., `design-system.styl`):
 ```stylus
 // 1. [Optional] Configure (BEFORE importing hail)
 $dsPrefix = 'my-app'
-$dsIgnoreResetsPreset = true   // eg: if you have your own reset
+$dsPresets = {
+  mode: 'opt-out',
+  listed: ('resets') // eg: if you have your own reset
+}
 
 // 2. Import hail
 @import '@mszr/hail-styl'
@@ -603,7 +635,8 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         stylus: {
-          imports: [path.resolve(__dirname, 'design-system.styl')],
+          paths: [path.resolve(process.cwd(), 'node_modules')], // <- needed so stylus can resolve `@import '@mszr/hail-styl'`
+          imports: [path.resolve(__dirname, 'design-system.styl')], // <- imports your design system entry file (which imports hail and sets up your design system)
         }
       }
     }

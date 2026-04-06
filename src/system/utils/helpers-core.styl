@@ -183,3 +183,12 @@ dsResolveTokenSegment(token, segment, required = true, logs = '')
     return $segments[$targetIndex]
   dsExpect(not required, Qs('Token "' token '" missing required segment "' segment '"'), $logs)
   return null
+
+// dsResolveShouldInclude(presetName: string): boolean
+dsResolveShouldInclude(presetName)
+  $logs = dsTrace('', 'dsResolveShouldInclude', Qs('@received -> "Preset":' presetName))
+  dsExpectString(presetName, $logs)
+  dsExpectAcceptedOption($dsPresets.mode, ('opt-in' 'opt-out'), $logs)
+  $isListed = presetName in $dsPresets.listed
+  return $dsPresets.mode == 'opt-in' ? $isListed : !$isListed
+

@@ -1,5 +1,16 @@
 # Publishing @mszr/hail-styl to npm
 
+## Pre-release Testing
+
+While testing a new version pre-release, you can update the import in `demo/design-system.styl` to use the local files:
+
+```stylus
+// @import '@mszr/hail-styl'       // Comment this out
+@import '../src/index'             // Use this while developing
+```
+
+Remember to revert this back to the `@mszr/hail-styl` import before pushing or publishing.
+
 ## Initial Release
 
 Log in if not already authenticated with `npm login`. Then:
@@ -18,7 +29,7 @@ You should see only files from `/src` plus `package.json`, `README.md`, and `LIC
 npm publish --access public
 ```
 
-The `--access public` flag is required for scoped packages (`@mszr/...`) to be publicly accessible.
+The `--access public` flag is required for scoped packages (eg: `@mszr/...`) to be publicly accessible.
 
 ---
 
@@ -66,10 +77,13 @@ ls node_modules/@mszr/hail-styl/src
 
 ## What's Included in the Package
 
-Only the `src/` directory is published, as configured by `"files": ["src"]` in `package.json`:
+Only the `src/` directory and root `.styl` files are published, as configured by `"files"` in `package.json`:
 
 ```txt
 @mszr/hail-styl/
+├── index.styl
+├── system.styl
+├── design.styl
 └── src/
     ├── index.styl
     ├── index-system.styl

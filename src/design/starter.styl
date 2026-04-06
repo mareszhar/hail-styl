@@ -1,12 +1,10 @@
-if $dsIgnoreStarterPreset is not true
-
   /*
   ----------------------------------------
   RESETS PRESET
   ----------------------------------------
   */
 
-  if $dsIgnoreResetsPreset is not true
+  if dsResolveShouldInclude('resets')
 
     _emitter()
       // apply a natural box layout model to all elements
@@ -114,7 +112,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreSpaceStepRolesPreset is not true
+  if dsResolveShouldInclude('space-step-roles')
 
     dsSetToken('sr:1p', dsSize(0.125))
     dsSetToken('sr:2p', dsSize(0.25))
@@ -131,7 +129,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreSpaceBreakpointRolesPreset is not true
+  if dsResolveShouldInclude('space-breakpoint-roles')
 
     dsSetToken('sr:breakpoint:mobile-s', 320px)
     dsSetToken('sr:breakpoint:mobile-m', 375px)
@@ -149,7 +147,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreColorMonochromaticPalettePreset is not true
+  if dsResolveShouldInclude('color-monochromatic-palette')
 
     dsSetColorChannelToken('color:accent:h', 264)
     dsSetColorChannelToken('color:accent:c', 1)
@@ -168,7 +166,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreColorBasicRolesPreset is not true
+  if dsResolveShouldInclude('color-basic-roles')
 
     dsSetToken('cr:primary', dsColor('color:accent', e: 0.5))
     dsSetToken('cr:bg', dsColor('color:matte', e: 0))
@@ -185,7 +183,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreTextBasicRolesPreset is not true
+  if dsResolveShouldInclude('text-basic-roles')
 
     dsSetTokenAssignments('tr:body', {
       font-family: Uq('Inter, sans-serif'),
@@ -197,7 +195,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreIconOverridesPreset is not true
+  if dsResolveShouldInclude('icon-overrides')
 
     // setting to `null` will make the tokens "known" without emitting any --var declarations
     dsSetToken('dr-icon:fill', null)
@@ -213,7 +211,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreBasicStylesPreset is not true
+  if dsResolveShouldInclude('basic-styles')
 
     _emitter()
       UseToken('tr:body')
@@ -229,7 +227,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreDarkSchemeOverridesPreset is not true
+  if dsResolveShouldInclude('dark-scheme-overrides')
 
     _useDarkSchemeOverrides()
       UseVar('color:control:most-elevated-l', Var('color:control:dark-scheme-most-elevated-l'))
@@ -248,7 +246,7 @@ if $dsIgnoreStarterPreset is not true
   ----------------------------------------
   */
 
-  if $dsIgnoreNuxtTransitionsPreset is not true
+  if dsResolveShouldInclude('nuxt-transitions')
 
     _emitter()
       .page-enter-active,

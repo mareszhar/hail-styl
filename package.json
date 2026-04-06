@@ -1,19 +1,16 @@
 {
   "name": "@mszr/hail-styl",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A Stylus-powered, versatile design system engine with a focus on safety and DX.",
   "main": "src/index.styl",
-  "exports": {
-    ".": "./src/index.styl",
-    "./system": "./src/index-system.styl",
-    "./design": "./src/index-design.styl",
-    "./src/*": "./src/*"
-  },
   "publishConfig": {
     "access": "public"
   },
   "files": [
-    "src"
+    "src",
+    "index.styl",
+    "system.styl",
+    "design.styl"
   ],
   "keywords": [
     "design-system",

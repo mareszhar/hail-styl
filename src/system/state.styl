@@ -9,6 +9,11 @@ $dsVarNamePrefix ?= Qn('--' $dsPrefix '-')
 $dsAttrPrefix ?= Qn('data-' $dsPrefix '-')
 $dsShouldPreventTokenOverwrites ?= true
 
+$dsPresets ?= {
+  mode: 'opt-out', // 'opt-in' (include only listed) | 'opt-out' (include all except listed)
+  listed: (),
+}
+
 /*
 ----------------------------------------
 TOKEN REGISTRY
