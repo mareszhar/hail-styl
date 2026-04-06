@@ -1,6 +1,6 @@
 {
   "name": "@mszr/hail-styl",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Stylus-powered, versatile design system engine with a focus on safety and DX.",
   "main": "src/index.styl",
   "publishConfig": {
@@ -32,5 +32,11 @@
   "bugs": {
     "url": "https://github.com/mareszhar/hail-styl/issues"
   },
-  "homepage": "https://github.com/mareszhar/hail-styl#readme"
+  "homepage": "https://github.com/mareszhar/hail-styl#readme",
+  "peerDependencies": {
+    "stylus": "^0.64.0"
+  },
+  "devDependencies": {
+    "stylus": "^0.64.0"
+  }
 }
