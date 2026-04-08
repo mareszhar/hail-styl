@@ -137,8 +137,8 @@ dsExpectTokenFormat(token, registryName = 'default', logs = '')
     dsExpectPatternMatch(token, $dsAssignmentTokenRegex, '"domain:name"', $logs)
   else
     dsExpectPatternMatch(token, $dsDefaultTokenRegex, '"domain:name" or "domain:name:suffix"', $logs)
-  if $dsAllowedDomainRegex != null
-    dsExpectPatternMatch(token, $dsAllowedDomainRegex, $dsAllowedDomainDemo, $logs)
+  if $dsAllowedTokenDomainRegex != null
+    dsExpectPatternMatch(token, $dsAllowedTokenDomainRegex, $dsAllowedTokenDomainDemo, $logs)
 
 // dsExpectTokenStatus(token: string, expectedStatus: 'new' | 'known', registryName?: RegistryName, logs?: string)
 dsExpectTokenStatus(token, expectedStatus, registryName = 'default', logs = '')
@@ -184,11 +184,26 @@ dsResolveTokenSegment(token, segment, required = true, logs = '')
   dsExpect(not required, Qs('Token "' token '" missing required segment "' segment '"'), $logs)
   return null
 
-// dsResolveShouldInclude(presetName: string): boolean
-dsResolveShouldInclude(presetName)
-  $logs = dsTrace('', 'dsResolveShouldInclude', Qs('@received -> "Preset":' presetName))
+// dsResolveAllowedTokenDomainRegex(logs?: string): string (regex pattern)
+dsResolveAllowedTokenDomainRegex(logs = '')
+  $logs = dsTrace(logs, 'dsResolveAllowedTokenDomainRegex', Qs('@received -> "Logs":' logs))
+  $allowedDomainOptions = ()
+  for $domain in $dsAllowedTokenDomains
+    dsExpectString($domain, $logs)
+    if match('\*$', $domain)
+      $domainPrefix = replace('\*', '', $domain)
+      dsExpectString($dsTokenSegmentRegex, Qs('Using " * " at the end of an allowed domain will replace that part with $dsTokenSegmentRegex, so $dsTokenSegmentRegex must be a regex string. See logs:' $logs))
+      push($allowedDomainOptions, Qn($domainPrefix $dsTokenSegmentRegex))
+    else
+      push($allowedDomainOptions, $domain)
+  $regex = Qn('^(' join('|', $allowedDomainOptions) '):')
+  p($regex)
+  return $regex
+
+// dsResolveShouldInclude(presetName: string, logs?: string): boolean
+dsResolveShouldInclude(presetName, logs = '')
+  $logs = dsTrace(logs, 'dsResolveShouldInclude', Qs('@received -> "Preset Name":' presetName))
   dsExpectString(presetName, $logs)
   dsExpectAcceptedOption($dsPresets.mode, ('opt-in' 'opt-out'), $logs)
   $isListed = presetName in $dsPresets.listed
   return $dsPresets.mode == 'opt-in' ? $isListed : !$isListed
-

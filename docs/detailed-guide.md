@@ -12,13 +12,14 @@
 4. [The Token System](#the-token-system)
 5. [The Rule Pipeline](#the-rule-pipeline)
 6. [Core API Reference](#core-api-reference)
-7. [Domain: Color](#domain-color)
-8. [Domain: Space](#domain-space)
-9. [Validation & Error Tracing](#validation--error-tracing)
-10. [Naming Conventions](#naming-conventions)
-11. [Configuration & Opt-outs](#configuration--opt-outs)
-12. [Adding to Your Project](#adding-to-your-project)
-13. [Extending the Engine](#extending-the-engine)
+7. [Domain: Layout](#domain-layout)
+8. [Domain: Size](#domain-size)
+9. [Domain: Color](#domain-color)
+10. [Validation & Error Tracing](#validation--error-tracing)
+11. [Naming Conventions](#naming-conventions)
+12. [Configuration & Opt-outs](#configuration--opt-outs)
+13. [Adding to Your Project](#adding-to-your-project)
+14. [Extending the Engine](#extending-the-engine)
 
 ---
 
@@ -28,7 +29,7 @@ hail-styl is a Stylus preprocessor library that provides a structured engine for
 
 - **Tokens** are named design values stored in a central registry and emitted as CSS custom properties.
 - **Rules** are CSS rule-sets registered into a pipeline and flushed in a determined order by a single top-level call.
-- **Domains** (color, space) extend the core with domain-specific helpers that build on top of the token system.
+- **Domains** (layout, size, color) extend the core with domain-specific helpers that build on top of the token system.
 - The engine is intentionally kept as a Stylus-layer concern — no JS runtime, no build plugins required beyond Stylus itself.
 
 ---
@@ -45,13 +46,13 @@ src/
 │   └── utils
 │       ├── api-primitives.styl    ← Low-level CSS/Stylus wrappers
 │       ├── api-core.styl          ← Val, Var, UseVar, UseToken
-│       ├── api-space.styl         ← UseFlex
+│       ├── api-layout.styl        ← UseFlex
 │       ├── api-color.styl         ← UseContrast
 │       ├── helpers-core.styl      ← Guards, validators, registry resolvers
-│       ├── helpers-space.styl     ← Size step/base/suffix resolvers
+│       ├── helpers-size.styl      ← Size step/base/suffix resolvers
 │       ├── helpers-color.styl     ← Color channel resolution helpers
 │       ├── setup-core.styl        ← dsSetToken, dsAddRule, etc.
-│       ├── setup-space.styl       ← dsSize
+│       ├── setup-size.styl        ← dsSize
 │       ├── setup-color.styl       ← dsColor, dsChannel, dsSetColorChannelToken
 │       └── setup-generation.styl  ← dsUseGenerateDeclarationsAtTopLevel
 └── design
@@ -66,7 +67,7 @@ The system loads in strict dependency order:
 1. `api-primitives` — foundational wrappers used everywhere
 2. `state` — global registries and config variables
 3. `helpers-core` → `setup-core` → `api-core` — token/rule infrastructure
-4. `helpers-*` → `setup-*` → `api-*` for each domain (space, color)
+4. `helpers-*` → `setup-*` → `api-*` for each domain (not all domains have utils of every kind)
 5. `setup-generation` — the flush machinery
 
 `index-design.styl` loads after the system, so design-layer tokens and rules are registered into an already-initialized engine.
@@ -137,21 +138,15 @@ domain:name[:suffix]
 
 **Allowed domains:**
 
-| Domain | Meaning |
-|---|---|
-| `space` | Raw space values |
-| `sr` | Space role (semantic) |
-| `color` | Raw color values |
-| `cr` | Color role (semantic) |
-| `text` | Raw text values |
-| `tr` | Text role (semantic) |
-| `dr-*` | Custom domain role (e.g., `dr-icon`) |
+Defined as a list in the `$dsAllowedDomains` variable in `state.styl`. The engine automatically resolves these into a regex. The regex resolver will replace any `*` symbol at the end of an allowed domain string in `$dsAllowedDomains` with `$dsTokenSegmentRegex`.
+
+As always, all regexes and regex demos in `state.styl` are customizable. Setting the regex to `null` will skip domain validation for tokens.
 
 ### Registering a Token
 
 ```stylus
 dsSetToken('color:accent', oklch(0.6 0.2 264))
-dsSetToken('sr:8p', dsSize(1))   // using dsSize helper
+dsSetToken('s:8p', dsSize(1))   // using dsSize helper
 ```
 
 ### Assignment Tokens
@@ -159,7 +154,7 @@ dsSetToken('sr:8p', dsSize(1))   // using dsSize helper
 An assignment token maps a `domain:name` to a set of CSS declarations. This is how text roles (or any declarative role) work:
 
 ```stylus
-dsSetTokenAssignments('tr:body', {
+dsSetTokenAssignments('t:body', {
   font-family: Uq('Inter, sans-serif'),
   line-height: 1.5,
 })
@@ -167,7 +162,7 @@ dsSetTokenAssignments('tr:body', {
 
 Assignment tokens are stored in a separate registry (`$dsTokenAssignments`) and accessed via `UseToken`.
 
-The properties of assignment tokens can also be used as standalone tokens (eg: `Var('tr:body:line-height')`).
+The properties of assignment tokens can also be used as standalone tokens (eg: `Var('t:body:line-height')`).
 
 ### CSS Variable Naming
 
@@ -175,7 +170,7 @@ Token names are converted to CSS custom property names by:
 1. Prepending `--` + the configured prefix (default: `hail`)
 2. Replacing `:` separators with `-`
 
-So `color:accent` → `--hail-color-accent`, `sr:8p` → `--hail-sr-8p`.
+So `color:accent` → `--hail-color-accent`, `s:8p` → `--hail-sr-8p`.
 
 The prefix is configurable via `$dsPrefix`, exposed by `state.styl`.
 
@@ -260,9 +255,9 @@ Resolves a token to a CSS `var()` reference. Use this wherever you would use a C
 
 ```stylus
 .card
-  background: Var('cr:bg')
-  padding: Var('sr:16p')
-  color: Var('cr:text-primary', black)  // with fallback
+  background: Var('s:bg')
+  padding: Var('s:16p')
+  color: Var('s:text-primary', black)  // with fallback
 ```
 
 ### `Val(token, registryName?)`
@@ -270,7 +265,7 @@ Resolves a token to a CSS `var()` reference. Use this wherever you would use a C
 Returns the raw Stylus value of a token from the registry. Necessary when a CSS variable reference won't work — e.g., inside a `@media` query condition.
 
 ```stylus
-@media (max-width: Val('sr:breakpoint:tablet'))
+@media (max-width: Val('s:breakpoint:tablet'))
   .sidebar
     display: none
 ```
@@ -281,8 +276,8 @@ Emits a `--token-name: value` declaration. Used to locally override a token's CS
 
 ```stylus
 .dark-card
-  UseVar('cr:bg', black)
-  UseVar('cr:text-primary', white)
+  UseVar('s:bg', black)
+  UseVar('s:text-primary', white)
 ```
 
 The `mode` argument defaults to `'overwrite'`. Use `'set'` to also register the token in the registry if not yet present.
@@ -293,9 +288,68 @@ Emits the CSS declarations stored in an assignment token. Optionally emit only o
 
 ```stylus
 p
-  UseToken('tr:body')           // emits all properties
-  UseToken('tr:body', 'font-family')  // emits only font-family
+  UseToken('t:body')           // emits all properties
+  UseToken('t:body', 'font-family')  // emits only font-family
 ```
+
+---
+
+## Domain: Layout
+
+The layout domain provides utilities for creating layouts. Its api exposes these utils:
+
+### `UseFlex(ff?, g?, jc?, ai?, ac?, inline?)`
+
+A convenience mixin for flexbox layouts with built-in validation.
+
+```stylus
+.row
+  UseFlex('row', Var('s:8p'), 'space-between', 'center')
+```
+
+All arguments are optional. Gap (`g`) accepts a CSS unit or a token string.
+
+---
+
+## Domain: Size
+
+The size domain provides size utilities based on a configurable base-size scale, with built-in support for rem-sensitivity.
+
+### `dsSize(step, base?)`
+
+Generates a `calc()` expression for a size value as a multiple of a base size.
+
+```stylus
+dsSize(1)    // → calc(base-size * 1)   = 8px (by default)
+dsSize(2)    // → calc(base-size * 2)   = 16px
+dsSize(0.5)  // → calc(base-size * 0.5) = 4px
+```
+
+### The `bem` Unit (rem-sensitive base)
+
+If you suffix your step with `bem`, the size is computed against the `bem` base instead of the raw pixel base. The `bem` base is derived from `base-size / rem-target * 1rem`, making it sensitive to the user's browser font-size preferences.
+
+```stylus
+dsSize(1bem)    // → calc(rem-sensitive-base * 1) — scales with user's font size preference
+dsSize(2bem)    // → calc(rem-sensitive-base * 2)
+```
+
+You can also use `rem` directly (without `dsSize`) if you want pure rem values independent of your base size scale:
+
+```stylus
+font-size: 1rem     // directly, no dsSize needed
+```
+
+> **Note:** Passing a `rem`-suffixed value to `dsSize` is a validation error — the engine will throw a descriptive error pointing you to the correct alternative (`bem` or bare `rem`).
+
+### Size Control Tokens
+
+| Token | Default | Purpose |
+|---|---|---|
+| `size-control:base` | `8` | Base unit in pixels |
+| `size-control:rem:target-px` | `base-size * 2 = 16` | Target px for 1rem equivalence |
+| `size-control:rem` | `rem-target / 16 * 100%` | Set as `font-size` on `:root`, or overwrite formula to not rely on a percentage if you want to emit it inside a custom scope (eg: on a third-party website) |
+| `size-control:bem` | derived from base & rem-target | The rem-sensitive base unit |
 
 ---
 
@@ -330,21 +384,21 @@ Every color has four channels: `l` (lightness, 0–1), `c` (chroma, 0–0.4), `h
 
 ```stylus
 // Normalized: factor maps across the configured min/max range
-dsSetToken('cr:bg', dsColor('color:matte', e: 0))       // e=0 → most background-like elevation
-dsSetToken('cr:primary', dsColor('color:accent', e: 0.5)) // midpoint elevation
+dsSetToken('s:bg', dsColor('color:matte', e: 0))       // e=0 → most background-like elevation
+dsSetToken('s:primary', dsColor('color:accent', e: 0.5)) // midpoint elevation
 
 // Relative: shift by a delta on top of the base color's current value
-dsSetToken('cr:hover', dsColor('cr:primary', eRel: 0.1))
+dsSetToken('s:hover', dsColor('s:primary', eRel: 0.1))
 
 // Explicit: set the channel directly
-dsSetToken('cr:subtle', dsColor('color:accent', cExp: 0.05))
+dsSetToken('s:subtle', dsColor('color:accent', cExp: 0.05))
 ```
 
 ### The Elevation System and Automatic Dark/Light Schemes
 
 This is hail-styl's most distinctive feature. **Elevation** is an abstract concept representing how "raised" a surface is in the visual hierarchy. Rather than defining separate color palettes for light and dark schemes, you define colors using an `e` factor (0 = floor/background, 1 = highest surface), and the engine automatically adapts them to the active scheme.
 
-The underlying principle relies on a single scheme-aware CSS variable: `color:control:most-elevated-l`.
+The underlying principle relies on a single scheme-aware CSS variable: `color-control:most-elevated-l`.
 
 - In **light scheme**: `most-elevated-l = 0` (high elevation → darker, closer to black)
 - In **dark scheme**: `most-elevated-l = 1` (high elevation → lighter, closer to white)
@@ -370,9 +424,9 @@ The scheme can also be forced via a data attribute (`{$dsAttrPrefix}-scheme`):
 
 ```stylus
 // These tokens work correctly in both light and dark mode:
-dsSetToken('cr:bg',           dsColor('color:matte', e: 0))      // lowest surface
-dsSetToken('cr:surface',      dsColor('color:matte', e: 0.2))
-dsSetToken('cr:text-primary', dsColor('color:matte', e: 1))      // highest contrast
+dsSetToken('s:bg',           dsColor('color:matte', e: 0))      // lowest surface
+dsSetToken('s:surface',      dsColor('color:matte', e: 0.2))
+dsSetToken('s:text-primary', dsColor('color:matte', e: 1))      // highest contrast
 ```
 
 No duplication. No `@media (prefers-color-scheme: dark) { ... }` for your semantic tokens.
@@ -393,12 +447,12 @@ Emits a `background-color` + `color` declaration pair where one is the given col
 
 ```stylus
 .badge
-  UseContrast('bg', Var('cr:primary'))   // bg = cr:primary, text = auto black/white
+  UseContrast('bg', Var('s:primary'))   // bg = s:primary, text = auto black/white
   // or
-  UseContrast('txt', Var('cr:primary'))  // text = cr:primary, bg = auto black/white
+  UseContrast('txt', Var('s:primary'))  // text = s:primary, bg = auto black/white
 ```
 
-The pivot lightness (`contrastPivotL`, default configured in `color:control:contrast-pivot-l`) determines the threshold: base colors darker than the pivot get white text; lighter ones get black text.
+The pivot lightness (`contrastPivotL`, default configured in `color-control:contrast-pivot-l`) determines the threshold: base colors darker than the pivot get white text; lighter ones get black text.
 
 ### Color Control Tokens
 
@@ -406,65 +460,12 @@ These live in `controls.styl` and can be overridden before importing `index-desi
 
 | Token | Default | Purpose |
 |---|---|---|
-| `color:control:min-l` | `0.08` | Minimum lightness |
-| `color:control:max-l` | `0.96` | Maximum lightness |
-| `color:control:min-c` | `0` | Minimum chroma |
-| `color:control:max-c` | `0.3` | Maximum chroma |
-| `color:control:contrast-pivot-l` | `0.65` | White text threshold |
-| `color:control:dark-scheme-saturation-factor` | `0.9` | Chroma reduction in dark mode |
-
----
-
-## Domain: Space
-
-The space domain provides size utilities based on a configurable base-size scale, with built-in support for rem-sensitivity.
-
-### `dsSize(step, base?)`
-
-Generates a `calc()` expression for a size value as a multiple of a base size.
-
-```stylus
-dsSize(1)    // → calc(base-size * 1)   = 8px (by default)
-dsSize(2)    // → calc(base-size * 2)   = 16px
-dsSize(0.5)  // → calc(base-size * 0.5) = 4px
-```
-
-### The `bem` Unit (rem-sensitive base)
-
-If you suffix your step with `bem`, the size is computed against the `bem` base instead of the raw pixel base. The `bem` base is derived from `base-size / rem-target * 1rem`, making it sensitive to the user's browser font-size preferences.
-
-```stylus
-dsSize(1bem)    // → calc(rem-sensitive-base * 1) — scales with user's font size preference
-dsSize(2bem)    // → calc(rem-sensitive-base * 2)
-```
-
-You can also use `rem` directly (without `dsSize`) if you want pure rem values independent of your base size scale:
-
-```stylus
-font-size: 1rem     // directly, no dsSize needed
-```
-
-> **Note:** Passing a `rem`-suffixed value to `dsSize` is a validation error — the engine will throw a descriptive error pointing you to the correct alternative (`bem` or bare `rem`).
-
-### `UseFlex(ff?, g?, jc?, ai?, ac?, inline?)`
-
-A convenience mixin for flexbox layouts with built-in validation.
-
-```stylus
-.row
-  UseFlex('row', Var('sr:8p'), 'space-between', 'center')
-```
-
-All arguments are optional. Gap (`g`) accepts a CSS unit or a token string.
-
-### Space Control Tokens
-
-| Token | Default | Purpose |
-|---|---|---|
-| `space:control:base-size` | `8` | Base unit in pixels |
-| `space:control:rem-target` | `base-size * 2 = 16` | Target px for 1rem equivalence |
-| `space:control:root-font-size` | `rem-target / 16 * 100%` | Set as `font-size` on `:root`, or overwrite formula to not rely on a percentage if you want to emit it inside a custom scope (eg: on a third-party website) |
-| `space:control:bem` | derived from base & rem-target | The rem-sensitive base unit |
+| `color-control:min-l` | `0.08` | Minimum lightness |
+| `color-control:max-l` | `0.96` | Maximum lightness |
+| `color-control:min-c` | `0` | Minimum chroma |
+| `color-control:max-c` | `0.3` | Maximum chroma |
+| `color-control:contrast-pivot-l` | `0.65` | White text threshold |
+| `color-control:saturation-factor:dark-scheme` | `0.9` | Chroma reduction in dark mode |
 
 ---
 
@@ -562,10 +563,10 @@ $dsPresets = {
   listed: ('resets' 'basic-styles')
 }
 
-// Example: opt-in to ONLY color monochromatic palette and space steps (ignore everything else)
+// Example: opt-in to ONLY color monochromatic palette and size steps (ignore everything else)
 $dsPresets = {
   mode: 'opt-in',
-  listed: ('color-monochromatic-palette' 'space-step-roles')
+  listed: ('color-monochromatic-palette' 'size-step-roles')
 }
 
 // Example: ignore EVERYTHING
@@ -580,12 +581,12 @@ $dsPresets = {
 | Name | Controls |
 |---|---|
 | `'resets'` | Default CSS browser reset rules |
-| `'space-step-roles'` | `sr:*p` tokens |
-| `'space-breakpoint-roles'` | `sr:breakpoint:*` tokens |
+| `'size-step-roles'` | `s:*p` tokens |
+| `'breakpoint-roles'` | `bp:*` tokens |
 | `'color-monochromatic-palette'`| `color:accent`, `color:tinted`, `color:matte` |
-| `'color-basic-roles'` | Basic `cr:*` color roles |
-| `'text-basic-roles'` | Basic `tr:*` text roles |
-| `'icon-overrides'` | `dr-icon:*` known overridable tokens for `hail-nuxt`'s `BaseIcon.vue` |
+| `'color-basic-roles'` | Basic `s:*` color roles |
+| `'text-basic-roles'` | Basic `t:*` text roles |
+| `'icon-overrides'` | `d-icon:*` known overridable tokens for `hail-nuxt`'s `BaseIcon.vue` |
 | `'basic-styles'` | Basic styles for `body` or similar entry node (depends on `color-basic-roles` and `text-basic-roles` being included. Or you could define your own before `index-design.styl` runs.) |
 | `'dark-scheme-overrides'` | Basic overrides for dark scheme flip support |
 | `'nuxt-transitions'` | Default fade transitions for Nuxt pages/layouts |
@@ -623,7 +624,7 @@ $dsShouldPreventTokenOverwrites = true
 // 4. [Optional] Add your own rules
 _emitter()
   body
-    UseToken('tr:body')
+    UseToken('t:body')
 dsAddRule(_emitter, 'unscoped')
 ```
 
@@ -671,8 +672,8 @@ With this setup, all token variables and flushed rules are available globally, a
 Register tokens anywhere in a file that's imported before `dsUseGenerateDeclarationsAtTopLevel()` is called:
 
 ```stylus
-dsSetToken('cr:success', dsColor('color:accent', h: 145, e: 0.5))
-dsSetToken('sr:xl', dsSize(6))
+dsSetToken('s:success', dsColor('color:accent', h: 145, e: 0.5))
+dsSetToken('s:xl', dsSize(6))
 ```
 
 ### Adding New Layers
@@ -690,7 +691,7 @@ Do this before any `dsAddRule` call.
 The allowed domain regex in `state.styl` can be overridden to allow new domain prefixes:
 
 ```stylus
-$dsAllowedDomainRegex = Qn('^(space|sr|color|cr|text|tr|dr-' $dsTokenSegmentRegex '|myapp-' $dsTokenSegmentRegex '):')
+$dsAllowedDomainRegex = Qn('^(size|s|color|c|text|t|d-' $dsTokenSegmentRegex '|myapp-' $dsTokenSegmentRegex '):')
 ```
 
 ### Overriding Color Controls
@@ -702,8 +703,8 @@ Customize the entire color system range after `index-design.styl` runs:
 @import '@mszr/hail-styl/design'
 
 $dsShouldPreventTokenOverwrites = false
-dsSetToken('color:control:min-l', 0.05)       // deeper darks
-dsSetToken('color:control:max-l', 0.98)       // brighter lights
-dsSetToken('color:control:max-c', 0.25)       // less saturated palette
+dsSetToken('color-control:min-l', 0.05)       // deeper darks
+dsSetToken('color-control:max-l', 0.98)       // brighter lights
+dsSetToken('color-control:max-c', 0.25)       // less saturated palette
 $dsShouldPreventTokenOverwrites = true
 ```

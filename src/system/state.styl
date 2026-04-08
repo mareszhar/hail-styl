@@ -7,8 +7,24 @@ SYSTEM CONFIGURATION
 $dsPrefix ?= 'hail'
 $dsVarNamePrefix ?= Qn('--' $dsPrefix '-')
 $dsAttrPrefix ?= Qn('data-' $dsPrefix '-')
+$dsAllowedTokenDomains ?= 'color',
+                          'color-control',
+                          'c', // color role
+                          'text',
+                          't', // text role
+                          'size',
+                          'size-control',
+                          's', // size role
+                          'bp', // breakpoint role
+                          'r', // radius role
+                          'bd', // border role
+                          'sd', // shadow role
+                          'gd', // gradient role
+                          'ts', // transition role
+                          'z', // z-index role
+                          'o', // opacity role
+                          'd-*' // custom domain (eg: component role)
 $dsShouldPreventTokenOverwrites ?= true
-
 $dsPresets ?= {
   mode: 'opt-out', // 'opt-in' (include only listed) | 'opt-out' (include all except listed)
   listed: (),
@@ -26,8 +42,8 @@ $dsDefaultTokenDemo ?= '"domain:name" or "domain:name:suffix"'
 $dsDefaultTokenRegex ?= Qn('^' $dsTokenSegmentRegex ':' $dsTokenSegmentRegex '(:' $dsTokenSegmentRegex ')?$')
 $dsAssignmentTokenDemo ?= '"domain:name"'
 $dsAssignmentTokenRegex ?= Qn('^' $dsTokenSegmentRegex ':' $dsTokenSegmentRegex '$')
-$dsAllowedDomainRegex ?= Qn('^(space|sr|color|cr|text|tr|dr-' $dsTokenSegmentRegex '):')
-$dsAllowedDomainDemo ?= '"space:name" or "sr:name" or "color:name" or "cr:name" or "text:name" or "tr:name" or "dr-name"'
+$dsAllowedTokenDomainDemo ?= Qs('Domain must be in "$dsAllowedTokenDomains". Token must start with one of:' $dsAllowedTokenDomains)
+$dsAllowedTokenDomainRegex ?= dsResolveAllowedTokenDomainRegex()
 
 $dsTokens ?= {
   // tokens follow default token pattern

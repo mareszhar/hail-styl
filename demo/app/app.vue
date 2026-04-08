@@ -1,10 +1,11 @@
 <template lang="html">
-  <h1>hello world</h1>
+  <h1>hail-styl</h1>
 </template>
 
 <style lang="stylus">
 dsUseGenerateDeclarationsAtTopLevel()
 
 h1
-  color: Var('cr:primary')
+  color: Var('c:primary')
+  text-align: center
 </style>

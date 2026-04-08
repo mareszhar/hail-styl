@@ -4,18 +4,18 @@ dsExpectColorDependencies(scope, logs = '')
   $scopes = 'e' 'l' 'c' 'h' 'a' 'slashAlpha' 'contrast'
   dsExpectAcceptedOption(scope, $scopes, $logs)
   if scope == 'e'
-    dsExpectTokenStatus('color:control:most-elevated-l', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:most-elevated-l', 'known', 'default', $logs)
   if scope == 'l' or scope == 'e'
-    dsExpectTokenStatus('color:control:min-l', 'known', 'default', $logs)
-    dsExpectTokenStatus('color:control:max-l', 'known', 'default', $logs)
-    dsExpectTokenStatus('color:control:l-range', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:min-l', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:max-l', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:l-range', 'known', 'default', $logs)
   if scope == 'c'
-    dsExpectTokenStatus('color:control:min-c', 'known', 'default', $logs)
-    dsExpectTokenStatus('color:control:max-c', 'known', 'default', $logs)
-    dsExpectTokenStatus('color:control:c-ceiling', 'known', 'default', $logs)
-    dsExpectTokenStatus('color:control:c-range', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:min-c', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:max-c', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:c-ceiling', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:c-range', 'known', 'default', $logs)
   if scope == 'contrast'
-    dsExpectTokenStatus('color:control:contrast-pivot-l', 'known', 'default', $logs)
+    dsExpectTokenStatus('color-control:contrast-pivot-l', 'known', 'default', $logs)
 
 // dsResolveExplicitChannel(channel: Channel, value: number | TokenOrVar, logs?: string): number | CSS var()
 dsResolveExplicitChannel(channel, value, logs = '')
@@ -38,9 +38,9 @@ dsResolveNormalizedChannel(channel, factor, logs = '')
     // The inner expression flips the interpolation direction based on the scheme:
     // - Light scheme (mostElevatedL = 0): Resolves to `1 - factor` (higher elevation = darker color)
     // - Dark scheme (mostElevatedL = 1): Resolves to `factor` (higher elevation = lighter color)
-    return Calc(Var('color:control:min-l', logs: $logs) '+' Var('color:control:l-range', logs: $logs) '* (' Precise(1 - factor) '+' Var('color:control:most-elevated-l', logs: $logs) '*' Precise(2 * factor - 1) ')')
+    return Calc(Var('color-control:min-l', logs: $logs) '+' Var('color-control:l-range', logs: $logs) '* (' Precise(1 - factor) '+' Var('color-control:most-elevated-l', logs: $logs) '*' Precise(2 * factor - 1) ')')
   // Formula: channelValue = min + range * factor
-  return Calc(Var(Qn('color:control:min-' channel), logs: $logs) '+' Var(Qn('color:control:' channel '-range'), logs: $logs) '*' factor)
+  return Calc(Var(Qn('color-control:min-' channel), logs: $logs) '+' Var(Qn('color-control:' channel '-range'), logs: $logs) '*' factor)
 
 // dsResolveRelativeChannel(channel: Channel, delta: number, logs?: string): CSS calc()
 dsResolveRelativeChannel(channel, delta, logs = '')
@@ -57,9 +57,9 @@ dsResolveRelativeChannel(channel, delta, logs = '')
     // The (2 * mostElevatedL - 1) expression acts as a scheme-aware direction multiplier:
     // - Light scheme (mostElevatedL = 0): Multiplier is -1 (higher elevation = darker color)
     // - Dark scheme (mostElevatedL = 1): Multiplier is +1 (higher elevation = lighter color)
-    return Calc('l +' Var('color:control:l-range', logs: $logs) '*' delta '* (2 *' Var('color:control:most-elevated-l', logs: $logs) '- 1)')
+    return Calc('l +' Var('color-control:l-range', logs: $logs) '*' delta '* (2 *' Var('color-control:most-elevated-l', logs: $logs) '- 1)')
   // Formula: newChannelValue = currentChannelValue + range * delta
-  return Calc(channel '+' Var(Qn('color:control:' channel '-range'), logs: $logs) '*' delta)
+  return Calc(channel '+' Var(Qn('color-control:' channel '-range'), logs: $logs) '*' delta)
 
 // dsResolveColorChannel(channel: Channel, expVal?: number | TokenOrVar, normVal?: number, relVal?: number, logs?: string): CSS var() | number | CSS calc() | CSS OKLCH channel
 dsResolveColorChannel(channel, expVal = null, normVal = null, relVal = null, logs = '')

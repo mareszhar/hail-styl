@@ -4,10 +4,10 @@ SPACE CONTROLS
 ----------------------------------------
 */
 
-dsSetToken('space:control:base-size', 8)
-dsSetToken('space:control:rem-target', Calc(Var('space:control:base-size') '*' 2)) // we aim for 16px
-dsSetToken('space:control:root-font-size', Calc(Var('space:control:rem-target') '/' 16 '*' 100%)) // divide by 16 (default browser font size) and multiply by 100% to return a percentage (sensitive to user's browser font-size preferences)
-dsSetToken('space:control:bem', Calc(Var('space:control:base-size') '/' Var('space:control:rem-target') '*' 1rem)) // base size, but derived from rem so it's sensitive to user's browser font-size preferences (called "bem")
+dsSetToken('size-control:base', 8)
+dsSetToken('size-control:rem:target-px', 16) // this means: "i want my rem to be X pixels out of Y", where X is your value and Y is the browser's default font-size in px. equivalent to setting rem to some percentage, but expressed in px instead
+dsSetToken('size-control:rem', Calc(Var('size-control:rem:target-px') '/' 16 '*' 100%)) // divide by 16 (default browser font size) and multiply by 100% to return a percentage (sensitive to user's browser font-size preferences)
+dsSetToken('size-control:bem', Calc(Var('size-control:base') '/' Var('size-control:rem:target-px') '*' 1rem)) // same as base size, but derived from rem so it's sensitive to user's browser font-size preferences (termed "bem")
 
 /*
 ----------------------------------------
@@ -15,13 +15,15 @@ COLOR CONTROLS
 ----------------------------------------
 */
 
-dsSetFactorToken('color:control:light-scheme-most-elevated-l', 0)
-dsSetFactorToken('color:control:dark-scheme-most-elevated-l', 1)
-dsSetToken('color:control:most-elevated-l', Var('color:control:light-scheme-most-elevated-l'))
-dsSetFactorToken('color:control:dark-scheme-saturation-factor', 0.9)
-dsSetFactorMinMaxTokens('color:control:min-l', 0.08, 'color:control:max-l', 0.96)
-dsSetToken('color:control:l-range', Calc(Var('color:control:max-l') '-' Var('color:control:min-l')))
-dsSetMinMaxTokens('color:control:min-c', 0, 'color:control:max-c', 0.3)
-dsSetToken('color:control:c-ceiling', Var('color:control:max-c'))
-dsSetToken('color:control:c-range', Calc(Var('color:control:c-ceiling') '-' Var('color:control:min-c')))
-dsSetFactorToken('color:control:contrast-pivot-l', 0.65) // UseContrast will use white for base colors darker than this l.
+dsSetFactorToken('color-control:most-elevated-l:light-scheme', 0)
+dsSetFactorToken('color-control:most-elevated-l:dark-scheme', 1)
+dsSetToken('color-control:most-elevated-l', Var('color-control:most-elevated-l:light-scheme'))
+dsSetFactorToken('color-control:saturation-factor:dark-scheme', 0.9)
+dsSetFactorMinMaxTokens('color-control:min-l', 0.08, 'color-control:max-l', 0.96)
+dsSetToken('color-control:l-range', Calc(Var('color-control:max-l') '-' Var('color-control:min-l')))
+dsSetMinMaxTokens('color-control:min-c', 0, 'color-control:max-c', 0.3)
+dsSetToken('color-control:c-ceiling:light-scheme', Var('color-control:max-c'))
+dsSetToken('color-control:c-ceiling:dark-scheme', Calc(Var('color-control:max-c') '*' Var('color-control:saturation-factor:dark-scheme')))
+dsSetToken('color-control:c-ceiling', Var('color-control:c-ceiling:light-scheme'))
+dsSetToken('color-control:c-range', Calc(Var('color-control:c-ceiling') '-' Var('color-control:min-c')))
+dsSetFactorToken('color-control:contrast-pivot-l', 0.65) // UseContrast will use white for base colors darker than this l.

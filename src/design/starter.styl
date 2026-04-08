@@ -108,38 +108,39 @@
 
   /*
   ----------------------------------------
-  SPACE STEP ROLES PRESET
+  SIZE STEP ROLES PRESET
   ----------------------------------------
   */
 
-  if dsResolveShouldInclude('space-step-roles')
+  if dsResolveShouldInclude('size-step-roles')
 
-    dsSetToken('sr:1p', dsSize(0.125))
-    dsSetToken('sr:2p', dsSize(0.25))
-    dsSetToken('sr:4p', dsSize(0.5))
-    dsSetToken('sr:8p', dsSize(1))
-    dsSetToken('sr:16p', dsSize(2))
-    dsSetToken('sr:24p', dsSize(3))
-    dsSetToken('sr:32p', dsSize(4))
-    dsSetToken('sr:40p', dsSize(5))
+    dsSetToken('s:1p', dsSize(0.125))
+    dsSetToken('s:2p', dsSize(0.25))
+    dsSetToken('s:4p', dsSize(0.5))
+    dsSetToken('s:8p', dsSize(1))
+    dsSetToken('s:16p', dsSize(2))
+    dsSetToken('s:24p', dsSize(3))
+    dsSetToken('s:32p', dsSize(4))
+    dsSetToken('s:40p', dsSize(5))
 
   /*
   ----------------------------------------
-  SPACE BREAKPOINT ROLES PRESET
+  BREAKPOINT ROLES PRESET
   ----------------------------------------
   */
 
-  if dsResolveShouldInclude('space-breakpoint-roles')
+  if dsResolveShouldInclude('breakpoint-roles')
 
-    dsSetToken('sr:breakpoint:mobile-s', 320px)
-    dsSetToken('sr:breakpoint:mobile-m', 375px)
-    dsSetToken('sr:breakpoint:mobile', 425px)
-    dsSetToken('sr:breakpoint:tablet', 768px)
-    dsSetToken('sr:breakpoint:desktop-s', 1024px)
-    dsSetToken('sr:breakpoint:desktop-m', 1280px)
-    dsSetToken('sr:breakpoint:desktop-l', 1536px)
-    dsSetToken('sr:breakpoint:desktop-xl', 1920px)
-    dsSetToken('sr:breakpoint:desktop-xxl', 2560px)
+    dsSetToken('bp:mobile:xs', 320px)
+    dsSetToken('bp:mobile:s', 375px)
+    dsSetToken('bp:mobile', 425px)
+    dsSetToken('bp:tablet', 768px)
+    dsSetToken('bp:tablet:l', 820px)
+    dsSetToken('bp:desktop:xs', 1024px)
+    dsSetToken('bp:desktop:s', 1280px)
+    dsSetToken('bp:desktop', 1536px)
+    dsSetToken('bp:desktop:l', 1920px)
+    dsSetToken('bp:desktop:xl', 2560px)
 
   /*
   ----------------------------------------
@@ -168,14 +169,14 @@
 
   if dsResolveShouldInclude('color-basic-roles')
 
-    dsSetToken('cr:primary', dsColor('color:accent', e: 0.5))
-    dsSetToken('cr:bg', dsColor('color:matte', e: 0))
-    dsSetToken('cr:txt-inverted', dsColor('color:matte', e: 0))
-    dsSetToken('cr:txt-highlighted', dsColor('color:matte', e: 1))
-    dsSetToken('cr:txt', dsColor('color:matte', e: 0.8))
-    dsSetToken('cr:txt-toned', dsColor('color:matte', e: 0.6))
-    dsSetToken('cr:txt-muted', dsColor('color:matte', e: 0.4))
-    dsSetToken('cr:txt-dimmed', dsColor('color:matte', e: 0.2))
+    dsSetToken('c:primary', dsColor('color:accent', e: 0.5))
+    dsSetToken('c:bg', dsColor('color:matte', e: 0))
+    dsSetToken('c:txt-inverted', dsColor('color:matte', e: 0))
+    dsSetToken('c:txt-highlighted', dsColor('color:matte', e: 1))
+    dsSetToken('c:txt', dsColor('color:matte', e: 0.8))
+    dsSetToken('c:txt-toned', dsColor('color:matte', e: 0.6))
+    dsSetToken('c:txt-muted', dsColor('color:matte', e: 0.4))
+    dsSetToken('c:txt-dimmed', dsColor('color:matte', e: 0.2))
 
   /*
   ----------------------------------------
@@ -185,8 +186,8 @@
 
   if dsResolveShouldInclude('text-basic-roles')
 
-    dsSetTokenAssignments('tr:body', {
-      font-family: Uq('Inter, sans-serif'),
+    dsSetTokenAssignments('t:body', {
+      font-size: 1rem,
     })
 
   /*
@@ -198,12 +199,12 @@
   if dsResolveShouldInclude('icon-overrides')
 
     // setting to `null` will make the tokens "known" without emitting any --var declarations
-    dsSetToken('dr-icon:fill', null)
-    dsSetToken('dr-icon:stroke', null)
-    dsSetToken('dr-icon:stroke-width', null)
-    dsSetToken('dr-icon:opacity', null)
-    dsSetToken('dr-icon:animation-duration', null)
-    dsSetToken('dr-icon:transition', null)
+    dsSetToken('d-icon:fill', null)
+    dsSetToken('d-icon:stroke', null)
+    dsSetToken('d-icon:stroke-width', null)
+    dsSetToken('d-icon:opacity', null)
+    dsSetToken('d-icon:animation-duration', null)
+    dsSetToken('d-icon:transition', null)
 
   /*
   ----------------------------------------
@@ -214,11 +215,11 @@
   if dsResolveShouldInclude('basic-styles')
 
     _emitter()
-      UseToken('tr:body')
-      font-size: Var('space:control:root-font-size')
       font-optical-sizing: auto
-      color: Var('cr:txt')
-      background: Var('cr:bg')
+      font-family: Uq('Inter, sans-serif')
+      font-size: Var('size-control:rem')
+      color: Var('c:txt')
+      background: Var('c:bg')
     dsAddRule(_emitter)
 
   /*
@@ -230,8 +231,8 @@
   if dsResolveShouldInclude('dark-scheme-overrides')
 
     _useDarkSchemeOverrides()
-      UseVar('color:control:most-elevated-l', Var('color:control:dark-scheme-most-elevated-l'))
-      UseVar('color:control:c-ceiling', Calc(Var('color:control:max-c') '*' Var('color:control:dark-scheme-saturation-factor')))
+      UseVar('color-control:most-elevated-l', Var('color-control:most-elevated-l:dark-scheme'))
+      UseVar('color-control:c-ceiling', Var('color-control:c-ceiling:dark-scheme'))
     _emitter()
       @media (prefers-color-scheme: dark)
         :root:not([{$dsAttrPrefix}scheme='light'])

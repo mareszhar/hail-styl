@@ -8,8 +8,8 @@ dsResolveSizeBase(step, base, logs = '')
     return dsResolveToVarRef(base, $logs)
   dsExpectUnit(step, logs: $logs)
   if dsHasUnit(step, 'bem')
-    return Var('space:control:bem', logs: $logs)
-  return Var('space:control:base-size', logs: $logs)
+    return Var('size-control:bem', logs: $logs)
+  return Var('size-control:base', logs: $logs)
 
 // dsResolveSizeStep(step: unit, logs?: string): number
 dsResolveSizeStep(step, logs = '')

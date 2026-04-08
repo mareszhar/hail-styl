@@ -9,7 +9,7 @@
 UseContrast(against, againstColor, contrastPivotL = null, logs = '')
   $logs = dsTrace(logs, 'UseContrast', Qs('@received -> "Against":' against '"Against Color":' againstColor '"Contrast Pivot L":' (contrastPivotL == null ? 'default' : contrastPivotL)))
   dsExpectAcceptedOption(against, 'bg' 'txt', $logs)
-  $pivotL = Var('color:control:contrast-pivot-l', logs: $logs)
+  $pivotL = Var('color-control:contrast-pivot-l', logs: $logs)
   if contrastPivotL != null
     $pivotL = Factor(contrastPivotL, $logs)
   $baseColor = typeof(againstColor) == 'rgba' ? againstColor : dsResolveToVarRef(againstColor, $logs)

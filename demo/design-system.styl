@@ -21,7 +21,8 @@ IMPORT HAIL
 ----------------------------------------
 */
 
-@import '@mszr/hail-styl'
+@import '../index.styl'
+// @import '@mszr/hail-styl'
 // PS: it's also possible to import `@mszr/hail-styl/system` and `@mszr/hail-styl/design` separately to do something in between.
 
 /*
@@ -35,13 +36,13 @@ IMPORT HAIL
 $dsShouldPreventTokenOverwrites = false
 
 dsSetColorChannelToken('color:accent:h', 164)
-dsSetToken('cr:bg', dsColor('color:matte', e: 0.1, cRel: 0.4))
-dsSetToken('cr:primary', dsColor('color:accent', e: 0.7, cRel: -0.2))
+dsSetToken('c:bg', dsColor('color:matte', e: 0.1, cRel: 0.4))
+dsSetToken('c:primary', dsColor('color:accent', e: 0.7, cRel: -0.2))
 
 $dsShouldPreventTokenOverwrites = true
 
 // extend...
 
 body
-  border: Var('sr:1p') solid Var('cr:primary')
-  padding: Var('sr:8p')
+  border: Var('s:1p') solid Var('c:primary')
+  padding: Var('s:8p')
