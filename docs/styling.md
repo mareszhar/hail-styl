@@ -28,7 +28,7 @@ If you've registered an assignment group (like typography), use `UseToken()` to 
 
 ```styl
 .text-body
-  UseToken('t:body')
+  UseToken('t:body') // will emit associated `prop: Var('token')` declarations
 
 // Or access a specific property from the assignment directly
 .text-title
