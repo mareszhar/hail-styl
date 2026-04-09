@@ -10,7 +10,7 @@
         "vue-router": "^5.0.4",
       },
       "devDependencies": {
-        "@mszr/hail-styl": "^1.0.1",
+        "@mszr/hail-styl": "^1.1.1",
         "@types/node": "^25.5.2",
         "stylus": "^0.64.0",
       },
@@ -167,7 +167,7 @@
 
     "@mapbox/node-pre-gyp": ["@mapbox/node-pre-gyp@2.0.3", "", { "dependencies": { "consola": "^3.2.3", "detect-libc": "^2.0.0", "https-proxy-agent": "^7.0.5", "node-fetch": "^2.6.7", "nopt": "^8.0.0", "semver": "^7.5.3", "tar": "^7.4.0" }, "bin": { "node-pre-gyp": "bin/node-pre-gyp" } }, "sha512-uwPAhccfFJlsfCxMYTwOdVfOz3xqyj8xYL3zJj8f0pb30tLohnnFPhLuqp4/qoEz8sNxe4SESZedcBojRefIzg=="],
 
-    "@mszr/hail-styl": ["@mszr/hail-styl@1.0.1", "", { "peerDependencies": { "stylus": "^0.64.0" } }, "sha512-YHZw8fkLjgvPbflsGnRCaaNuF/FneWS6YBkiUK4jEmi7bQbaxj9bDFYd7A92k1obc2s/z53tAZ0QHnpBKOmkOg=="],
+    "@mszr/hail-styl": ["@mszr/hail-styl@1.1.1", "", { "peerDependencies": { "stylus": "^0.64.0" } }, "sha512-cXFz/sB+0phLVjVvndFjFFUazDRyrCmG2IKhxt9PIDprdXTCvpsTziMbcMQwmj6qTvo49FFW4PLbDttVbulHnA=="],
 
     "@napi-rs/wasm-runtime": ["@napi-rs/wasm-runtime@1.1.2", "", { "dependencies": { "@tybys/wasm-util": "^0.10.1" }, "peerDependencies": { "@emnapi/core": "^1.7.1", "@emnapi/runtime": "^1.7.1" } }, "sha512-sNXv5oLJ7ob93xkZ1XnxisYhGYXfaG9f65/ZgYuAu3qt7b3NadcOEhLvx28hv31PgX8SZJRYrAIPQilQmFpLVw=="],
 
