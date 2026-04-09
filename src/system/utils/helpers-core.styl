@@ -197,7 +197,6 @@ dsResolveAllowedTokenDomainRegex(logs = '')
     else
       push($allowedDomainOptions, $domain)
   $regex = Qn('^(' join('|', $allowedDomainOptions) '):')
-  p($regex)
   return $regex
 
 // dsResolveShouldInclude(presetName: string, logs?: string): boolean

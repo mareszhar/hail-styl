@@ -1,14 +1,37 @@
+/**
+ * General UI-related kit utilities (Layout, Color Contrast, etc.)
+ */
+
+// UseFlex(ff?: FlexFlow, g?: Unit | TokenOrVar, jc?: FlexJustify, ai?: FlexAlign, ac?: FlexAlign, inline?: boolean, logs?: string): CSS Flexbox
+UseFlex(ff = null, g = null, jc = null, ai = null, ac = null, inline = false, logs = '')
+  $logs = dsTrace(logs, 'UseFlex', Qs('@received -> "Flex Flow":' ff '"Gap":' g '"Justify Content":' jc '"Align Content":' ac '"Align Items":' ai '"Inline":' inline))
+  display: inline ? inline-flex : flex
+  if ff
+    dsExpectAcceptedOption(ff, 'row' 'row-reverse' 'column' 'column-reverse', $logs)
+    flex-flow: Uq(ff)
+  if g  
+    gap: dsIsString(g) ? dsResolveToVarRef(g, $logs) : Unit(g, logs: $logs)
+  if jc
+    dsExpectAcceptedOption(jc, 'flex-start' 'flex-end' 'center' 'space-between' 'space-around' 'space-evenly', $logs)
+    justify-content: Uq(jc)
+  if ai
+    dsExpectAcceptedOption(ai, 'flex-start' 'flex-end' 'center' 'stretch' 'baseline', $logs)
+    align-items: Uq(ai)
+  if ac
+    dsExpectAcceptedOption(ac, 'flex-start' 'flex-end' 'center' 'stretch' 'baseline', $logs)
+    align-content: Uq(ac)
+
 /*
  * Produces a contrasting color and background-color declaration pair.
- * @param {'bg' | 'txt'} against - The base element to contrast against.
+ * @param {'bg' | 'fg'} against - The base element to contrast against.
  * @param {CSS color | TokenOrVar} againstColor - The color of that base element.
  * @param {Factor}? contrastPivotL - Contrasting color will be white for base colors darker than this l
  * @param {string}? logs - Debugging logs or message
  * @return {CSS} CSS declarations for background-color and color with contrasting values
-*/
+ */
 UseContrast(against, againstColor, contrastPivotL = null, logs = '')
   $logs = dsTrace(logs, 'UseContrast', Qs('@received -> "Against":' against '"Against Color":' againstColor '"Contrast Pivot L":' (contrastPivotL == null ? 'default' : contrastPivotL)))
-  dsExpectAcceptedOption(against, 'bg' 'txt', $logs)
+  dsExpectAcceptedOption(against, 'bg' 'fg', $logs)
   $pivotL = Var('color-control:contrast-pivot-l', logs: $logs)
   if contrastPivotL != null
     $pivotL = Factor(contrastPivotL, $logs)
@@ -22,6 +45,6 @@ UseContrast(against, againstColor, contrastPivotL = null, logs = '')
   if against == 'bg'
     background-color: $baseColor
     color: $contrastingColor
-  else if against == 'txt'
+  else if against == 'fg'
     background-color: $contrastingColor
     color: $baseColor

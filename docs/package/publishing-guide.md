@@ -4,7 +4,7 @@
 
 While testing a new version pre-release, you can update the import in `demo/design-system.styl` to use the local files:
 
-```stylus
+```styl
 // @import '@mszr/hail-styl'       // Comment this out
 @import '../src/index'             // Use this while developing
 ```
@@ -90,7 +90,7 @@ Only the `src/` directory and root `.styl` files are published, as configured by
     ├── index-design.styl
     ├── design/
     │   ├── controls.styl
-    │   └── starter.styl
+    │   └── presets.styl
     └── system/
         ├── state.styl
         └── utils/

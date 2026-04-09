@@ -1,77 +1,65 @@
 # hail-styl
 
-A Stylus-powered design system engine. Tokens, rules, and automatic light/dark scheme support — no JS runtime required.
+**A Stylus-powered design system engine.** No JS runtime, just pure Stylus magic for robust, scalable, and theme-agnostic styling.
 
-## Install
+## Features
 
-```sh
+- 🛡️ **Token Validation**: Built-in registry ensures every `Var()` maps to a registered token, preventing CSS mistakes.
+- 🏗️ **Unified Flush Pipeline**: Register tokens and rules anywhere and emit them exactly once at the top level.
+- 🌓 **Elevation-based Theming**: Automatic light/dark mode support via semantic elevation factors.
+- 🧩 **Modular**: Leverages lazy evaluation and registries to keep design logic separate from emission.
+
+---
+
+## Quick Start
+
+### 1. Install
+
+```bash
 npm install -D @mszr/hail-styl
 ```
 
-## Getting Started
+### 2. Configure
+In the `design-system.styl` auto-imported by your build tool:
 
-The typical setup has four steps, split across two locations:
-
-**Steps 1–3** belong in a design system entry file (e.g. `design-system.styl`) that is configured to be **auto-imported everywhere** — in every component and every stylesheet. Step 4 belongs in a file that is processed exactly **once** (e.g. `app.vue`).
-
-### design-system.styl
-
-```stylus
-// 1. [Optional] Configure hail BEFORE importing
-$dsPrefix = 'my-app'             // changes CSS variable prefix (default: 'hail')
-
-// $dsPresets controls which starter presets to include.
-// mode: 'opt-out' includes everything EXCEPT the listed presets.
-// mode: 'opt-in' includes ONLY the listed presets.
-$dsPresets = {
-  mode: 'opt-out',
-  listed: ('resets')
-}
-
-// 2. Import hail
+```styl
 @import '@mszr/hail-styl'
 
-// 3. [Optional] Customize / extend AFTER importing
-$dsShouldPreventTokenOverwrites = false
-dsSetColorChannelToken('color:accent:h', 200)  // change accent hue
-$dsShouldPreventTokenOverwrites = true
+dsSetToken('c:brand', rebeccapurple)
 ```
 
-> **Tip:** You can also import `@mszr/hail-styl/system` and `@mszr/hail-styl/design` separately if you need to run code between engine initialization and the default design layer.
+### 3. Flush
+In your `app.vue` or main single-use entry point:
 
-### app.vue (or equivalent — once only)
-
-```stylus
-// Flush: emits all token CSS variables and all registered rules.
-// Call this exactly once, at the top level of a file that is consumed once.
+```styl
+// Emits all CSS variables and rules
 dsUseGenerateDeclarationsAtTopLevel()
 ```
 
-After this, `Var()`, `Val()`, `UseToken()` and all other engine utilities are available in every component without any additional imports.
+---
 
-### Nuxt / Vite wiring example
+## Documentation
 
-```ts
-// nuxt.config.ts
-import path from 'node:path'
-import process from 'node:process'
+The documentation is split into focused modules to keep things concise and AI-friendly:
 
-export default defineNuxtConfig({
-  vite: {
-    css: {
-      preprocessorOptions: {
-        stylus: {
-          paths: [path.resolve(process.cwd(), 'node_modules')],
-          additionalData: `@import '${path.resolve(process.cwd(), './design-system.styl')}'`,
-        },
-      },
-    },
-  },
-})
-```
+1. [**Principles**](https://github.com/mareszhar/hail-styl/blob/main/docs/principles.md) — The mental model: Registries, Flushing, and Elevation. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/principles.md)
+2. [**Getting Started**](https://github.com/mareszhar/hail-styl/blob/main/docs/getting-started.md) — Installation, configuration, and the Flush call. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/getting-started.md)
+3. [**Designing**](https://github.com/mareszhar/hail-styl/blob/main/docs/designing.md) — Defining tokens, rules, and the elevation system. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/designing.md)
+4. [**Styling**](https://github.com/mareszhar/hail-styl/blob/main/docs/styling.md) — Usage in components: `Var()`, `UseToken()`, and UI utilities. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/styling.md)
+5. [**Customizing**](https://github.com/mareszhar/hail-styl/blob/main/docs/customizing.md) — Global configuration, presets, and core controls. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/customizing.md)
+6. [**API Reference**](https://github.com/mareszhar/hail-styl/blob/main/docs/api-reference.md) — A compact, searchable list of every tool in the engine. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/api-reference.md)
 
-## Further Reading
+---
 
-- [Detailed Guide](https://github.com/mareszhar/hail-styl/blob/main/docs/detailed-guide.md) — full API reference: tokens, rules, color system, space domain, validation, and extension patterns.
-- [LLM Guide](https://github.com/mareszhar/hail-styl/blob/main/docs/llm-guide.md) — concise reference optimized for AI-assisted development.
-- [Nuxt Demo](https://github.com/mareszhar/hail-styl/tree/main/demo) — a working minimal Nuxt project showing the full setup in context.
+## AI Assistants
+
+Use these templates to help an AI assistant work with your design system:
+
+- [Styling Context](./docs/templates/styling-context.md) — Teach AI to style components with your tokens.
+- [Design Context](./docs/templates/design-context.md) — Teach AI to extend your design system.
+
+---
+
+## 📺 Demo
+
+Check out the [Nuxt Minimal Demo](./demo) to see `hail-styl` in action in a real project.
