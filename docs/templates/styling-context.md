@@ -68,6 +68,7 @@ A quick guide to styling with the **hail-styl** design system engine.
 
 ### 📐 Design Principles
 
+- **Semantic Tokens**: Tokens are grouped by domain (see [Semantic Domains](#semantic-domains)).
 - **Tokens over Values**: Always prefer styling with tokens over hard-coded values (see [Available Tokens](#available-tokens)).
 
 ### 🗺️ Useful References
@@ -84,6 +85,10 @@ If you need to define new tokens, check out the [Design Context](./design-contex
 ---
 
 ## Project-Specific Context
+
+### Semantic Domains
+
+> **USER: INSERT THE LIST OF YOUR SEMANTIC DOMAINS HERE.**
 
 ### Available Tokens
 
