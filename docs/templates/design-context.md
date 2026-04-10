@@ -34,6 +34,16 @@ If you need to style things using the design system, check out the [Styling Cont
 
 ## Project-Specific Context
 
+> **USER: KEEP THIS WARNING IF YOU'RE USING VITE/VUE/NUXT.**
+
+### ⚠️ Worth Noting
+
+Auto-imported stylus code reruns for each component. This means the engine state is **reconstructed from scratch in every component**.
+
+Token registrations outside the file(s) configured for auto-importing will only be known inside that file or the ones imported in it after the registration.
+
+To ensure tokens are known across the entire application, define them in the file(s) configured for auto-importing.
+
 ### Current Configuration
 
 > **USER: INSERT THE PATH(S) TO YOUR CURRENT SYSTEM CONFIGURATION HERE.**

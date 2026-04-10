@@ -32,25 +32,11 @@ In your application's single-use entry point (such as `app.vue` or `main.styl`),
 dsUseGenerateDeclarationsAtTopLevel()
 ```
 
-## Configuring Auto-imports (Vite example)
+## 4. Configure your Build Tool
 
-```ts
-// vite.config.ts
+To make your design system available in every component, you must configure your build tool (Vite, Webpack, etc.) to **auto-import** your `design-system.styl` partial.
 
-import path from 'node:path'
-import process from 'node:process'
-
-export default {
-  css: {
-    preprocessorOptions: {
-      stylus: {
-        paths: [path.resolve(process.cwd(), 'node_modules')],
-        additionalData: `@import '${path.resolve(process.cwd(), './design-system.styl')}'`,
-      },
-    },
-  },
-}
-```
+For detailed setup steps and environment-specific gotchas, see the [Integrations & Environments](./integrations.md) [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/integrations.md) guide.
 
 That's it! Your engine is now running. You're ready to start [designing](./designing.md) [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/designing.md) your tokens.
 

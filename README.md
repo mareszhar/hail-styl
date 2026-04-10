@@ -50,6 +50,7 @@ The documentation is split into focused modules to keep things concise and AI-fr
 5. [**Customizing**](https://github.com/mareszhar/hail-styl/blob/main/docs/customizing.md) — Global configuration, presets, and core controls. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/customizing.md)
 6. [**API Reference**](https://github.com/mareszhar/hail-styl/blob/main/docs/api-reference.md) — A compact, searchable list of every tool in the engine. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/api-reference.md)
 7. [**Conventions**](https://github.com/mareszhar/hail-styl/blob/main/docs/conventions.md) — Naming and architectural conventions for utils, variables, and tokens. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/conventions.md)
+8. [**Integrations**](https://github.com/mareszhar/hail-styl/blob/main/docs/integrations.md) — Setup guides for Vite/Nuxt and technical gotchas. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/integrations.md)
 
 ---
 

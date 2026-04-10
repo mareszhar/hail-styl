@@ -86,6 +86,16 @@ If you need to define new tokens, check out the [Design Context](./design-contex
 
 ## Project-Specific Context
 
+> **USER: KEEP THIS WARNING IF YOU'RE USING VITE/VUE/NUXT.**
+
+### ⚠️ Worth Noting
+
+Auto-imported stylus code reruns for each component. This means the engine state is **reconstructed from scratch in every component**.
+
+A `UseVar('new-token', 'value', 'set')` call in a component will emit a `--var` declaration and register the new token, but a `Var('new-token')` call will only work in the same component.
+
+If you need to define a variable for a component that should be available in other components, you should define it in the file(s) configured for auto-importing.
+
 ### Semantic Domains
 
 > **USER: INSERT THE LIST OF YOUR SEMANTIC DOMAINS HERE.**
