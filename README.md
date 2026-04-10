@@ -48,6 +48,7 @@ The documentation is split into focused modules to keep things concise and AI-fr
 4. [**Styling**](https://github.com/mareszhar/hail-styl/blob/main/docs/styling.md) — Usage in components: `Var()`, `UseToken()`, and UI utilities. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/styling.md)
 5. [**Customizing**](https://github.com/mareszhar/hail-styl/blob/main/docs/customizing.md) — Global configuration, presets, and core controls. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/customizing.md)
 6. [**API Reference**](https://github.com/mareszhar/hail-styl/blob/main/docs/api-reference.md) — A compact, searchable list of every tool in the engine. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/api-reference.md)
+7. [**Conventions**](https://github.com/mareszhar/hail-styl/blob/main/docs/conventions.md) — Naming and architectural conventions for utils, variables, and tokens. [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/conventions.md)
 
 ---
 
