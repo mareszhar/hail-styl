@@ -1,13 +1,14 @@
 # hail-styl
 
-**A Stylus-powered design system engine.** No JS runtime, just pure Stylus magic for robust, scalable, and theme-agnostic styling.
+**A versatile design system engine for Stylus.** Define robust, theme-agnostic design systems with built-in safety and modularity.
 
 ## Features
 
-- 🛡️ **Token Validation**: Built-in registry ensures every `Var()` maps to a registered token, preventing CSS mistakes.
-- 🏗️ **Unified Flush Pipeline**: Register tokens and rules anywhere and emit them exactly once at the top level.
-- 🌓 **Elevation-based Theming**: Automatic light/dark mode support via semantic elevation factors.
-- 🧩 **Modular**: Leverages lazy evaluation and registries to keep design logic separate from emission.
+- 🛡️ **Token Validation** — Dedicated token utilities to deliver consistency at scale. Style confidently with reliable checks and alerts.
+- 🏗️ **Unified Flush Pipeline** — Decoupled design logic from CSS emission. Register tokens and rules anywhere, then emit them in a single, clean pass.
+- 🌓 **Automatic Light/Dark mode** — Use a semantic elevation from 0 to 1 to set colors that automatically adapt their lightness to the current scheme.
+- 🤩 **DX-First** — Clean APIs for easy interpolation, concatenation, and validation. Integrated error tracing makes debugging a breeze.
+- ✨ **Zero JS Runtime** — Pure Stylus magic. No client-side overhead for a fast-by-default experience.
 
 ---
 
