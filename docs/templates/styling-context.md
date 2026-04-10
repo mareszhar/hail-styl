@@ -76,7 +76,7 @@ A quick guide to styling with the **hail-styl** design system engine.
 For more detailed information, refer to the following guides (only fetch if you need additional context to accomplish your task):
 
 - [API Reference](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/api-reference.md) &bull; Full list of most important utils to know (lightweight reference with signatures and purposes only, no implementation details).
-- [Stylus Help](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/stylus-help.md) &bull; Quick reference on avoiding Stlyus quirks (currently only contains notes and examples on how to write `@media` and `@container` queries)
+- [Stylus Help](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/stylus-help.md) &bull; Quick reference on avoiding Stlyus quirks (check it out if you need to write `@media` and `@container` queries)
 - [Styling Guide](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/styling.md) &bull; Further comments and examples of using utils to style components.
 - [Principles](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/principles.md) &bull; Mental model behind the design system's engine (registries, unified flushing pipepline, elevation system, etc).
 
