@@ -68,8 +68,8 @@ A quick guide to styling with the **hail-styl** design system engine.
 
 ### 📐 Design Principles
 
-- **Semantic Tokens**: Tokens are grouped by domain (see [Semantic Domains](#semantic-domains)).
-- **Tokens over Values**: Always prefer styling with tokens over hard-coded values (see [Available Tokens](#available-tokens)).
+- **Semantic Tokens**: Tokens are grouped by domain (see [Our Design System](#our-design-system)).
+- **Tokens over Values**: Always prefer styling with tokens over hard-coded values (see [Our Design System](#our-design-system)).
 
 ### 🗺️ Useful References
 
@@ -86,8 +86,6 @@ If you need to define new tokens, check out the [Design Context](./design-contex
 
 ## Project-Specific Context
 
-> **USER: KEEP THIS WARNING IF YOU'RE USING VITE/VUE/NUXT.**
-
 ### ⚠️ Worth Noting
 
 Auto-imported stylus code reruns for each component. This means the engine state is **reconstructed from scratch in every component**.
@@ -96,14 +94,6 @@ A `UseVar('new-token', 'value', 'set')` call in a component will emit a `--var` 
 
 If you need to define a variable for a component that should be available in other components, you should define it in the file(s) configured for auto-importing.
 
-### Semantic Domains
+### Our Design System
 
-> **USER: INSERT THE LIST OF YOUR SEMANTIC DOMAINS HERE.**
-
-### Available Tokens
-
-> **USER: INSERT THE PATH(S) TO YOUR SEMANTIC TOKEN DEFINITIONS HERE.**
-
-### Custom Utilities
-
-> **USER: INSERT THE PATH(S) TO YOUR CUSTOM UTILITIES HERE.**
+> **USER: INSERT THE PATH(S) TO YOUR CURRENT SYSTEM CONFIGURATION, ALLOWED TOKEN DOMAINS, CUSTOM UTILS, ETC. HERE.**

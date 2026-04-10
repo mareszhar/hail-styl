@@ -13,7 +13,7 @@ A quick guide to designing with the **hail-styl** design system engine.
 
 ### 💡 Best Practices
 
-- **Semantic Names**: Tokens are grouped by domain (see [Current Configuration](#current-configuration)).
+- **Semantic Names**: Tokens are grouped by domain (see [Our Design System](#our-design-system)).
 - **Use Elevation**: Always prefer `e: 0..1` for colors to ensure theme-agnostic behavior.
 - **Layers**: Distribute rules across appropriate layers via the `$dsLayers` configuration.
 - **Validation**: Enforce the `domain:name:[suffix]` pattern for all tokens.
@@ -34,8 +34,6 @@ If you need to style things using the design system, check out the [Styling Cont
 
 ## Project-Specific Context
 
-> **USER: KEEP THIS WARNING IF YOU'RE USING VITE/VUE/NUXT.**
-
 ### ⚠️ Worth Noting
 
 Auto-imported stylus code reruns for each component. This means the engine state is **reconstructed from scratch in every component**.
@@ -44,7 +42,6 @@ Token registrations outside the file(s) configured for auto-importing will only 
 
 To ensure tokens are known across the entire application, define them in the file(s) configured for auto-importing.
 
-### Current Configuration
+### Our Design System
 
-> **USER: INSERT THE PATH(S) TO YOUR CURRENT SYSTEM CONFIGURATION HERE.**
-> **USER: INSERT THE LIST OF ALLOWED TOKEN DOMAINS HERE.**
+> **USER: INSERT THE PATH(S) TO YOUR CURRENT SYSTEM CONFIGURATION, ALLOWED TOKEN DOMAINS, CUSTOM UTILS, ETC. HERE.**

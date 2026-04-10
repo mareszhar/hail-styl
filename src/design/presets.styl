@@ -1,264 +1,264 @@
-  /*
-  ----------------------------------------
-  RESETS PRESET
-  ----------------------------------------
-  */
+/*
+----------------------------------------
+RESETS PRESET
+----------------------------------------
+*/
 
-  if dsResolveShouldInclude('resets')
+if dsResolveShouldInclude('resets')
 
-    _emitter()
-      // apply a natural box layout model to all elements
+  _emitter()
+    // apply a natural box layout model to all elements
+    &,
+    &::before,
+    &::after,
+    & *,
+    & *::before,
+    & *::after
+      box-sizing: border-box
+      margin: 0
+      padding: 0
+
+    // smooth scrolling for anchor links
+    &
+      scroll-behavior: smooth
+
+    // remove default list styles
+    & ul,
+    & ol,
+    & li
+      list-style: none
+
+    // responsive images and videos
+    & img,
+    & picture,
+    & video,
+    & iframe
+      display: block
+      max-width: 100%
+      height: auto
+
+    // form elements reset
+    & input,
+    & textarea,
+    & select,
+    & button
+      border: none
+      outline: none
+      background: none
+      font: inherit
+      color: inherit
+      line-height: inherit
+      letter-spacing: inherit
+
+      // remove default browser styling
+      -webkit-appearance: none
+      -moz-appearance: none
+      appearance: none
+
+    // pointer cursor for clickable elements
+    & button,
+    & [type='button'],
+    & [type='reset'],
+    & [type='submit'],
+    & label[for]
+      cursor: pointer
+
+    // anchor tags should not have text decoration by default
+    & a
+      text-decoration: none
+      color: inherit
+
+    // table elements should not have cell spacing or padding by default
+    & table
+      border-collapse: collapse
+      border-spacing: 0
+
+    // remove quotes from the list items
+    & blockquote,
+    & q
+      quotes: none
+
+    // reset blockquote and q before and after quotes
+    & blockquote::before,
+    & blockquote::after,
+    & q::before,
+    & q::after
+      content: ''
+      content: none
+
+    // responsive embeds
+    & embed,
+    & object
+      max-width: 100%
+
+    // remove animations for people who've turned them off
+    @media (prefers-reduced-motion: reduce)
       &,
       &::before,
       &::after,
       & *,
       & *::before,
       & *::after
-        box-sizing: border-box
-        margin: 0
-        padding: 0
+        animation-duration: 0.01ms !important
+        animation-iteration-count: 1 !important
+        transition-duration: 0.01ms !important
+        scroll-behavior: auto !important
 
-      // smooth scrolling for anchor links
-      &
-        scroll-behavior: smooth
+  dsAddRule(_emitter, 'scoped', 'reset')
 
-      // remove default list styles
-      & ul,
-      & ol,
-      & li
-        list-style: none
+/*
+----------------------------------------
+SIZE STEP ROLES PRESET
+----------------------------------------
+*/
 
-      // responsive images and videos
-      & img,
-      & picture,
-      & video,
-      & iframe
-        display: block
-        max-width: 100%
-        height: auto
+if dsResolveShouldInclude('size-step-roles')
 
-      // form elements reset
-      & input,
-      & textarea,
-      & select,
-      & button
-        border: none
-        outline: none
-        background: none
-        font: inherit
-        color: inherit
-        line-height: inherit
-        letter-spacing: inherit
+  dsSetToken('s:1p', dsSize(0.125))
+  dsSetToken('s:2p', dsSize(0.25))
+  dsSetToken('s:4p', dsSize(0.5))
+  dsSetToken('s:8p', dsSize(1))
+  dsSetToken('s:16p', dsSize(2))
+  dsSetToken('s:24p', dsSize(3))
+  dsSetToken('s:32p', dsSize(4))
+  dsSetToken('s:40p', dsSize(5))
 
-        // remove default browser styling
-        -webkit-appearance: none
-        -moz-appearance: none
-        appearance: none
+/*
+----------------------------------------
+BREAKPOINT ROLES PRESET
+----------------------------------------
+*/
 
-      // pointer cursor for clickable elements
-      & button,
-      & [type='button'],
-      & [type='reset'],
-      & [type='submit'],
-      & label[for]
-        cursor: pointer
+if dsResolveShouldInclude('breakpoint-roles')
 
-      // anchor tags should not have text decoration by default
-      & a
-        text-decoration: none
-        color: inherit
+  dsSetToken('bp:mobile:xs', 320px)
+  dsSetToken('bp:mobile:s', 375px)
+  dsSetToken('bp:mobile', 425px)
+  dsSetToken('bp:tablet', 768px)
+  dsSetToken('bp:tablet:l', 820px)
+  dsSetToken('bp:desktop:xs', 1024px)
+  dsSetToken('bp:desktop:s', 1280px)
+  dsSetToken('bp:desktop', 1536px)
+  dsSetToken('bp:desktop:l', 1920px)
+  dsSetToken('bp:desktop:xl', 2560px)
 
-      // table elements should not have cell spacing or padding by default
-      & table
-        border-collapse: collapse
-        border-spacing: 0
+/*
+----------------------------------------
+COLOR MONOCHROMATIC PALETTE PRESET
+----------------------------------------
+*/
 
-      // remove quotes from the list items
-      & blockquote,
-      & q
-        quotes: none
+if dsResolveShouldInclude('color-monochromatic-palette')
 
-      // reset blockquote and q before and after quotes
-      & blockquote::before,
-      & blockquote::after,
-      & q::before,
-      & q::after
-        content: ''
-        content: none
+  dsSetColorChannelToken('color:accent:h', 264)
+  dsSetColorChannelToken('color:accent:c', 1)
+  dsSetColorChannelToken('color:accent:l', 0.5)
+  dsSetToken('color:accent', Oklch(Var('color:accent:l') Var('color:accent:c') Var('color:accent:h')))
 
-      // responsive embeds
-      & embed,
-      & object
-        max-width: 100%
+  dsSetColorChannelToken('color:tinted:c', 0.2)
+  dsSetToken('color:tinted', dsColor('color:accent', cExp: 'color:tinted:c'))
 
-      // remove animations for people who've turned them off
-      @media (prefers-reduced-motion: reduce)
-        &,
-        &::before,
-        &::after,
-        & *,
-        & *::before,
-        & *::after
-          animation-duration: 0.01ms !important
-          animation-iteration-count: 1 !important
-          transition-duration: 0.01ms !important
-          scroll-behavior: auto !important
+  dsSetColorChannelToken('color:matte:c', 0.02)
+  dsSetToken('color:matte', dsColor('color:accent', cExp: 'color:matte:c'))
 
-    dsAddRule(_emitter, 'scoped', 'reset')
+/*
+----------------------------------------
+COLOR BASIC ROLES PRESET
+----------------------------------------
+*/
 
-  /*
-  ----------------------------------------
-  SIZE STEP ROLES PRESET
-  ----------------------------------------
-  */
+if dsResolveShouldInclude('color-basic-roles')
 
-  if dsResolveShouldInclude('size-step-roles')
+  dsSetToken('c:primary', dsColor('color:accent', e: 0.5))
+  dsSetToken('c:bg', dsColor('color:matte', e: 0))
+  dsSetToken('c:txt-inverted', dsColor('color:matte', e: 0))
+  dsSetToken('c:txt-highlighted', dsColor('color:matte', e: 1))
+  dsSetToken('c:txt', dsColor('color:matte', e: 0.8))
+  dsSetToken('c:txt-toned', dsColor('color:matte', e: 0.6))
+  dsSetToken('c:txt-muted', dsColor('color:matte', e: 0.4))
+  dsSetToken('c:txt-dimmed', dsColor('color:matte', e: 0.2))
 
-    dsSetToken('s:1p', dsSize(0.125))
-    dsSetToken('s:2p', dsSize(0.25))
-    dsSetToken('s:4p', dsSize(0.5))
-    dsSetToken('s:8p', dsSize(1))
-    dsSetToken('s:16p', dsSize(2))
-    dsSetToken('s:24p', dsSize(3))
-    dsSetToken('s:32p', dsSize(4))
-    dsSetToken('s:40p', dsSize(5))
+/*
+----------------------------------------
+TEXT BASIC ROLES PRESET
+----------------------------------------
+*/
 
-  /*
-  ----------------------------------------
-  BREAKPOINT ROLES PRESET
-  ----------------------------------------
-  */
+if dsResolveShouldInclude('text-basic-roles')
 
-  if dsResolveShouldInclude('breakpoint-roles')
+  dsSetTokenAssignments('t:body', {
+    font-size: 1rem,
+  })
 
-    dsSetToken('bp:mobile:xs', 320px)
-    dsSetToken('bp:mobile:s', 375px)
-    dsSetToken('bp:mobile', 425px)
-    dsSetToken('bp:tablet', 768px)
-    dsSetToken('bp:tablet:l', 820px)
-    dsSetToken('bp:desktop:xs', 1024px)
-    dsSetToken('bp:desktop:s', 1280px)
-    dsSetToken('bp:desktop', 1536px)
-    dsSetToken('bp:desktop:l', 1920px)
-    dsSetToken('bp:desktop:xl', 2560px)
+/*
+----------------------------------------
+[CUSTOM DOMAIN] ICON OVERRIDES PRESET
+----------------------------------------
+*/
 
-  /*
-  ----------------------------------------
-  COLOR MONOCHROMATIC PALETTE PRESET
-  ----------------------------------------
-  */
+if dsResolveShouldInclude('icon-overrides')
 
-  if dsResolveShouldInclude('color-monochromatic-palette')
+  // setting to `null` will make the tokens "known" without emitting any --var declarations
+  dsSetToken('d-icon:fill', null)
+  dsSetToken('d-icon:stroke', null)
+  dsSetToken('d-icon:stroke-width', null)
+  dsSetToken('d-icon:opacity', null)
+  dsSetToken('d-icon:animation-duration', null)
+  dsSetToken('d-icon:transition', null)
 
-    dsSetColorChannelToken('color:accent:h', 264)
-    dsSetColorChannelToken('color:accent:c', 1)
-    dsSetColorChannelToken('color:accent:l', 0.5)
-    dsSetToken('color:accent', Oklch(Var('color:accent:l') Var('color:accent:c') Var('color:accent:h')))
+/*
+----------------------------------------
+BASIC STYLES PRESET
+----------------------------------------
+*/
 
-    dsSetColorChannelToken('color:tinted:c', 0.2)
-    dsSetToken('color:tinted', dsColor('color:accent', cExp: 'color:tinted:c'))
+if dsResolveShouldInclude('basic-styles')
 
-    dsSetColorChannelToken('color:matte:c', 0.02)
-    dsSetToken('color:matte', dsColor('color:accent', cExp: 'color:matte:c'))
+  _emitter()
+    font-optical-sizing: auto
+    font-family: Uq('Inter, sans-serif')
+    font-size: Var('size-control:rem')
+    color: Var('c:txt')
+    background: Var('c:bg')
+  dsAddRule(_emitter)
 
-  /*
-  ----------------------------------------
-  COLOR BASIC ROLES PRESET
-  ----------------------------------------
-  */
+/*
+----------------------------------------
+DARK SCHEME OVERRIDES PRESET
+----------------------------------------
+*/
 
-  if dsResolveShouldInclude('color-basic-roles')
+if dsResolveShouldInclude('dark-scheme-overrides')
 
-    dsSetToken('c:primary', dsColor('color:accent', e: 0.5))
-    dsSetToken('c:bg', dsColor('color:matte', e: 0))
-    dsSetToken('c:txt-inverted', dsColor('color:matte', e: 0))
-    dsSetToken('c:txt-highlighted', dsColor('color:matte', e: 1))
-    dsSetToken('c:txt', dsColor('color:matte', e: 0.8))
-    dsSetToken('c:txt-toned', dsColor('color:matte', e: 0.6))
-    dsSetToken('c:txt-muted', dsColor('color:matte', e: 0.4))
-    dsSetToken('c:txt-dimmed', dsColor('color:matte', e: 0.2))
-
-  /*
-  ----------------------------------------
-  TEXT BASIC ROLES PRESET
-  ----------------------------------------
-  */
-
-  if dsResolveShouldInclude('text-basic-roles')
-
-    dsSetTokenAssignments('t:body', {
-      font-size: 1rem,
-    })
-
-  /*
-  ----------------------------------------
-  [CUSTOM DOMAIN] ICON OVERRIDES PRESET
-  ----------------------------------------
-  */
-
-  if dsResolveShouldInclude('icon-overrides')
-
-    // setting to `null` will make the tokens "known" without emitting any --var declarations
-    dsSetToken('d-icon:fill', null)
-    dsSetToken('d-icon:stroke', null)
-    dsSetToken('d-icon:stroke-width', null)
-    dsSetToken('d-icon:opacity', null)
-    dsSetToken('d-icon:animation-duration', null)
-    dsSetToken('d-icon:transition', null)
-
-  /*
-  ----------------------------------------
-  BASIC STYLES PRESET
-  ----------------------------------------
-  */
-
-  if dsResolveShouldInclude('basic-styles')
-
-    _emitter()
-      font-optical-sizing: auto
-      font-family: Uq('Inter, sans-serif')
-      font-size: Var('size-control:rem')
-      color: Var('c:txt')
-      background: Var('c:bg')
-    dsAddRule(_emitter)
-
-  /*
-  ----------------------------------------
-  DARK SCHEME OVERRIDES PRESET
-  ----------------------------------------
-  */
-
-  if dsResolveShouldInclude('dark-scheme-overrides')
-
-    _useDarkSchemeOverrides()
-      UseVar('color-control:most-elevated-l', Var('color-control:most-elevated-l:dark-scheme'))
-      UseVar('color-control:c-ceiling', Var('color-control:c-ceiling:dark-scheme'))
-    _emitter()
-      @media (prefers-color-scheme: dark)
-        :root:not([{$dsAttrPrefix}scheme='light'])
-          _useDarkSchemeOverrides()
-      :root[{$dsAttrPrefix}scheme='dark']
+  _useDarkSchemeOverrides()
+    UseVar('color-control:most-elevated-l', Var('color-control:most-elevated-l:dark-scheme'))
+    UseVar('color-control:c-ceiling', Var('color-control:c-ceiling:dark-scheme'))
+  _emitter()
+    @media (prefers-color-scheme: dark)
+      :root:not([{$dsAttrPrefix}scheme='light'])
         _useDarkSchemeOverrides()
-    dsAddRule(_emitter, 'unscoped')
+    :root[{$dsAttrPrefix}scheme='dark']
+      _useDarkSchemeOverrides()
+  dsAddRule(_emitter, 'unscoped')
 
-  /*
-  ----------------------------------------
-  NUXT TRANSITIONS PRESET
-  ----------------------------------------
-  */
+/*
+----------------------------------------
+NUXT TRANSITIONS PRESET
+----------------------------------------
+*/
 
-  if dsResolveShouldInclude('nuxt-transitions')
+if dsResolveShouldInclude('nuxt-transitions')
 
-    _emitter()
-      .page-enter-active,
-      .page-leave-active,
-      .layout-enter-active,
-      .layout-leave-active
-        transition: all 0.3s ease
+  _emitter()
+    .page-enter-active,
+    .page-leave-active,
+    .layout-enter-active,
+    .layout-leave-active
+      transition: all 0.3s ease
 
-      .page-enter-from,
-      .page-leave-to,
-      .layout-enter-from,
-      .layout-leave-to
-        opacity: 0
-    dsAddRule(_emitter, 'unscoped')
+    .page-enter-from,
+    .page-leave-to,
+    .layout-enter-from,
+    .layout-leave-to
+      opacity: 0
+  dsAddRule(_emitter, 'unscoped')
