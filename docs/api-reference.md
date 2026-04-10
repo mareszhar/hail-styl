@@ -11,7 +11,7 @@ These utilities are designed for use within your components and stylesheets.
 | `Var` | `(token, fallback?)` | Returns the CSS `var()` reference for a registered token. |
 | `Val` | `(token)` | Returns the raw, unquoted value of a registered token. |
 | `UseToken` | `(token, property?)` | Emits CSS properties for an assignment token group. |
-| `UseVar` | `(token, value, mode?)` | Sets or overwrites a CSS variable within a specific scope. |
+| `UseVar` | `(token, value)` | Registers and applies a scoped CSS variable overwrite. |
 | `UseFlex` | `(ff, g, jc, ai, ac, inline?)` | A type-safe flexbox utility for building layouts. |
 | `UseContrast`| `(base, baseColor, pivot?)` | Emits contrasting background and text color pairs. |
 | `Unit` | `(value, suffix?)` | Validates and returns a CSS unit value. |
@@ -44,7 +44,7 @@ These utilities are designed for use in your `design-system.styl` or the files i
 
 | Utility | Signature | Description |
 | :--- | :--- | :--- |
-| `dsSetToken` | `(name, value)` | Registers a new token in the system registry. |
+| `dsSetToken` | `(token, value, shouldAllowTokenOverwrites?)` | Registers a token in the system registry. |
 | `dsSetTokenAssignment` | `(name, { prop: value, ... })` | Registers a group of properties as an assignment token. |
 | `dsSetColorChannelToken` | `(token, value)` | Registers or updates a specific color channel (l, c, h, a) for a token with automatic normalization if needed. |
 | `dsAddRule` | `(emitter, scoping?, layer?)` | Registers a mixin as a global CSS rule. |

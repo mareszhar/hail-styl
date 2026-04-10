@@ -46,15 +46,15 @@ Every time a component (e.g., `Button.vue`) is processed, the Stylus engine star
 
 Because every file re-runs the same `design-system.styl` in the same order, they all **reconstruct the same state**. This creates the illusion of a single global registry, but in reality, each component has its own private copy.
 
-### The `UseVar('...', mode: 'set')` Gotcha
-If you use `UseVar(..., 'set')` inside a component, you are updating the registry **only for that specific component execution.**
+### The `UseVar(...)` Scoped Registration
+If you use `UseVar(...)` inside a component to register a new token, you are updating the registry **only for that specific component execution.**
 
 - ✅ **Works**: Referencing that token with `Var()` later in the *same* component.
 - ❌ **Fails**: Referencing that token in a child component or a different file.
 
 ### Best Practices for Shared State
 1. **Global Tokens**: Always define shared design intent (colors, spacing, etc.) in your primary `design-system.styl` or its imports.
-2. **Local Overwrites**: Use `UseVar(..., value)` (without `mode: 'set'`) to locally overwrite a globally known token's value for a component subtree.
+2. **Local Overwrites**: Use `UseVar(..., value)` to locally register or overwrite a token's value for a component subtree.
 3. **Component Domains**: For component-specific tokens that need nested access, define them in the global registry using a specific domain (e.g., `d-card:shadow`).
 
 ---

@@ -64,20 +64,26 @@ Automatically sets a contrasting `background-color` and `color` pair based on an
 
 ## 4. Local Overwrites
 
-Use `UseVar()` to emit a CSS variable that overwrites (default) or sets its registry value for the current scope.
+Use `UseVar()` to emit a CSS variable that overwrites an existing token or registers a new one for the current scope.
 
 ```styl
 .custom-section
   // Locally overwrites the primary color to red for this scope only
   UseVar('c:primary', red)
+
+  .label
+    color: Var('c:primary')
 ```
 
-To use and register a local `--var`, pass `mode: 'set'` to `UseVar()`:
+You can also use it to register a completely new token locally:
 
 ```styl
 .custom-section
-  UseVar('c:new-color', gray, 'set')
+  UseVar('c:new-color', gray)
 
   .label
     color: Var('c:new-color')
 ```
+
+> [!TIP]
+> Use the `v:` (Variable) domain for local or generic variables that aren't meant to overwrite a global token (e.g., `v:grid-gap`). This prevents accidental collisions with globally registered design roles.

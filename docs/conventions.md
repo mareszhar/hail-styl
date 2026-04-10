@@ -80,6 +80,7 @@ $dsAllowedTokenDomains ?= 'color',
                           'ts', // transition role
                           'z', // z-index role
                           'o', // opacity role
+                          'v', // defined-within-component variable role
                           'd-*' // custom domain (eg: component role)
 ```
 

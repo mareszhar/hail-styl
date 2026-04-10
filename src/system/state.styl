@@ -23,8 +23,9 @@ $dsAllowedTokenDomains ?= 'color',
                           'ts', // transition role
                           'z', // z-index role
                           'o', // opacity role
-                          'd-*' // custom domain (eg: component role)
-$dsShouldPreventTokenOverwrites ?= true
+                          'v', // defined-within-component variable role (avoid collisions with global tokens)
+                          'd-*' // custom domain (eg: a component role that needs to be globally available so other components can use it)
+$dsShouldAllowTokenOverwrites ?= false
 $dsPresets ?= {
   mode: 'opt-out', // 'opt-in' (include only listed) | 'opt-out' (include all except listed)
   listed: (),

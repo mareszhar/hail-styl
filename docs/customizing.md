@@ -10,7 +10,7 @@ You can configure the engine by setting some special variables **before** import
 | :--- | :--- | :--- |
 | `$dsPrefix` | `'hail'` | The prefix used for all generated CSS variables. |
 | `$dsLayers` | `('reset' 'base')` | The order in which rule layers are emitted. |
-| `$dsShouldPreventTokenOverwrites` | `true` | When true, prevents accidental overwriting of existing tokens. |
+| `$dsShouldAllowTokenOverwrites` | `false` | When true, allows overwriting existing tokens. |
 | `$dsAllowedTokenDomains` | (list) | A list of allowed prefixes for token names (e.g., `color`, `size`). |
 
 For a full list of customizable global variables, see:  

@@ -32,13 +32,13 @@ IMPORT HAIL
 
 // customize...
 
-$dsShouldPreventTokenOverwrites = false
+$dsShouldAllowTokenOverwrites = true
 
 dsSetColorChannelToken('color:accent:h', 164)
 dsSetToken('c:bg', dsColor('color:matte', e: 0.1, cRel: 0.4))
 dsSetToken('c:primary', dsColor('color:accent', e: 0.7, cRel: -0.2))
 
-$dsShouldPreventTokenOverwrites = true
+$dsShouldAllowTokenOverwrites = false
 
 // extend...
 

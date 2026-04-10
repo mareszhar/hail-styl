@@ -26,12 +26,10 @@ Var(token, fallback = null, logs = '')
   $logs = dsTrace(logs, 'Var', Qs('@received -> "Token":' token (fallback != null ? Qs('"Fallback":' fallback) : '')))
   return dsResolveToken(token, 'var-ref', 'default', fallback, $logs)
 
-// UseVar(token: string, value: any, mode?: 'set' | 'overwrite', logs?: string): CSS --ds-token: value
-UseVar(token, value, mode = 'overwrite', logs = '')
-  $logs = dsTrace(logs, 'UseVar', Qs('@received -> "Token":' token '"Value":' value '"Mode":' mode))
-  dsExpectAcceptedOption(mode, ('set' 'overwrite'), $logs)
-  if mode == 'set'
-    dsSetToken(token, value, $logs)
+// UseVar(token: string, value: any, logs?: string): CSS --ds-token: value
+UseVar(token, value, logs = '')
+  $logs = dsTrace(logs, 'UseVar', Qs('@received -> "Token":' token '"Value":' value))
+  dsSetToken(token, value, shouldAllowTokenOverwrites: true, logs: $logs)
   $varName = dsResolveToken(token, 'var-name', logs: $logs)
   { $varName }: value
 

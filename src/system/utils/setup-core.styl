@@ -1,7 +1,7 @@
-// dsSetToken(token: string, value: CSS, logs?: string)
-dsSetToken(token, value, logs = '')
-  $logs = dsTrace(logs, 'dsSetToken', Qs('@received -> "Token":' token '"Value":' value))
-  if $dsShouldPreventTokenOverwrites
+// dsSetToken(token: string, value: CSS, shouldAllowTokenOverwrites?: boolean, logs?: string)
+dsSetToken(token, value, shouldAllowTokenOverwrites = false, logs = '')
+  $logs = dsTrace(logs, 'dsSetToken', Qs('@received -> "Token":' token '"Value":' value '"Allow Overwrites":' shouldAllowTokenOverwrites))
+  if !($dsShouldAllowTokenOverwrites or shouldAllowTokenOverwrites)
     dsExpectTokenStatus(token, 'new', 'default', $logs)
   $dsTokens[token] = value
 
@@ -12,10 +12,10 @@ dsSetTokenAssignment(token, cssProperty, value, logs = '')
   dsExpectCssProperty(cssProperty, $logs)
   if !(token in $dsTokenAssignments)
     $dsTokenAssignments[token] = {}
-  if $dsShouldPreventTokenOverwrites
+  if !$dsShouldAllowTokenOverwrites
     dsExpect(!(cssProperty in $dsTokenAssignments[token]), Qs('CSS Property "' cssProperty '" is already assigned to token "' token '".'), $logs)
   $dsTokenAssignments[token][cssProperty] = value
-  dsSetToken(Qn(token ':' cssProperty), value, $logs)
+  dsSetToken(Qn(token ':' cssProperty), value, logs: $logs)
 
 // dsSetTokenAssignments(token: string, assignments: Object<CSS Property, any>, logs?: string)
 dsSetTokenAssignments(token, assignments, logs = '')
@@ -27,14 +27,14 @@ dsSetTokenAssignments(token, assignments, logs = '')
 dsSetFactorToken(token, factor, logs = '')
   $logs = dsTrace(logs, 'dsSetFactorToken', Qs('@received -> "Token":' token '"Factor":' factor))
   dsExpectFactor(factor, $logs)
-  dsSetToken(token, factor, $logs)
+  dsSetToken(token, factor, logs: $logs)
 
 // dsSetMinMaxTokens(minToken: string, minValue: number, maxToken: string, maxValue: number, logs?: string)
 dsSetMinMaxTokens(minToken, minValue, maxToken, maxValue, logs = '')
   $logs = dsTrace(logs, 'dsSetMinMaxTokens', Qs('@received -> "Min Token":' minToken '"Min Value":' minValue '"Max Token":' maxToken '"Max Value":' maxValue))
   dsExpectMinMax(minValue, maxValue, $logs)
-  dsSetToken(minToken, minValue, $logs)
-  dsSetToken(maxToken, maxValue, $logs)
+  dsSetToken(minToken, minValue, logs: $logs)
+  dsSetToken(maxToken, maxValue, logs: $logs)
 
 // dsSetFactorMinMaxTokens(minToken: string, minFactor: Factor, maxToken: string, maxFactor: Factor, logs?: string)
 dsSetFactorMinMaxTokens(minToken, minFactor, maxToken, maxFactor, logs = '')

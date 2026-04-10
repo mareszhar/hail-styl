@@ -13,7 +13,7 @@ dsSetColorChannelToken(token, value, logs = '')
   dsExpectTokenFormat(token, 'default', $logs)
   $channel = dsResolveTokenSegment(token, 'suffix', logs: $logs)
   dsExpectAcceptedOption($channel, 'l' 'c' 'h' 'a', $logs)
-  dsSetToken(token, dsChannel($channel, value, 'auto', $logs), $logs)
+  dsSetToken(token, dsChannel($channel, value, 'auto', $logs), logs: $logs)
 
 /**
  * Define a color based off another. Supports granular adjustments to each channel.
