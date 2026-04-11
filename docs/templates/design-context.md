@@ -6,7 +6,7 @@ A quick guide to designing with the **hail-styl** design system engine.
 
 ### 🏗️ Core Utilities
 
-- `dsSetToken(token, value)`: Register a simple value (color, numeric, etc.).
+- `dsSetToken(name, value)`: Register a simple value (color, numeric, etc.).
 - `dsSetTokenAssignment(name, { property: value, ... })`: Register a reusable group of property-value assignments.
 - `dsColor(base, e: 0..1, ...)`: Semantic color adjustment with automatic light/dark support.
 - `dsAddRule(_mixin)`: Add a global style rule to the unified registry.
