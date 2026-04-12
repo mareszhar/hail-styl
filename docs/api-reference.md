@@ -14,9 +14,10 @@ These utilities are designed for use within your components and stylesheets.
 | `UseVar` | `(token, value)` | Registers and applies a scoped CSS variable overwrite. |
 | `UseFlex` | `(ff, g, jc, ai, ac, inline?)` | A type-safe flexbox utility for building layouts. |
 | `UseContrast`| `(base, baseColor, pivot?)` | Emits contrasting background and text color pairs. |
+| `Contrast` | `(baseColor, pivot?)` | Returns a contrasting color (black or white) against a given base color. |
 | `Unit` | `(value, suffix?)` | Validates and returns a CSS unit value. |
 | `Factor` | `(number)` | Validates and returns a normalized factor (0 to 1). |
-| `Relative` | `(number)` | Validates and returns a relative factor (-1 to 1). |
+| `RelativeFactor` | `(number)` | Validates and returns a relative factor (-1 to 1). |
 
 ### Kit Primitives
 

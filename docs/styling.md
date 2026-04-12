@@ -48,6 +48,18 @@ A full-featured flexbox utility with type safety.
   UseFlex(ff: 'column', g: 's:16p', jc: 'center', ai: 'stretch')
 ```
 
+### 🌓 Color: Contrast
+
+A functional utility that returns a contrasting color (black or white) for any property. Use this when you need flexibility beyond background/text pairings.
+
+```styl
+.button
+  background-color: Var('c:primary')
+  // Contrast against the primary color for the border and text
+  border: 1px solid Contrast('c:primary')
+  color: Contrast('c:primary')
+```
+
 ### 🌓 Color: UseContrast
 
 Automatically sets a contrasting `background-color` and `color` pair based on an adjustable pivot point.
