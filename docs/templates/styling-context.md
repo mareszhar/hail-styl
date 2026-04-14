@@ -51,7 +51,7 @@ A quick guide to styling with the **hail-styl** design system engine.
 .selector
   background: Var('c:primary')
   border: 1px solid Contrast('c:primary') // passing a token works
-  color: Contrast(Var('c:primary')) // passing a var also works
+  color: Contrast(Var('c:holiday-brand')) // passing a var also works
 ```
 
 - `UseContrast('bg'|'fg', TokenOrVar)`: Emit a contrasting `background-color` and `color` pair.
