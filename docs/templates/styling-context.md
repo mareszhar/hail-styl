@@ -46,16 +46,19 @@ A quick guide to styling with the **hail-styl** design system engine.
 ```
 
 - `Contrast(TokenOrVar)`: Returns a contrasting color (black or white) against a given base color.
-- `UseContrast('bg'|'fg', TokenOrVar)`: Emit a contrasting `background-color` and `color` pair.
 
 ```styl
-.selector-a
+.selector
   background: Var('c:primary')
   border: 1px solid Contrast('c:primary') // passing a token works
   color: Contrast(Var('c:primary')) // passing a var also works
+```
 
-.selector-b
-  UseContrast('bg', 'c:bg') // background-color gets 'c:bg', color gets Contrast('c:bg')
+- `UseContrast('bg'|'fg', TokenOrVar)`: Emit a contrasting `background-color` and `color` pair.
+
+```styl
+.selector
+  UseContrast('bg', 'c:bg') // `background-color` gets 'c:bg', `color` gets Contrast('c:bg')
 ```
 
 - `Qn` (quote joining with nothing), `Qs` (quote joining with spaces), `Uqn` (unquote joining with nothing), `Uqs` (unquote joining with spaces), `Uq` (unquote): Concatenation/Interpolation helpers. Accept any number of arguments and support automatic interpolation.
