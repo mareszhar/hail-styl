@@ -206,3 +206,13 @@ dsResolveShouldInclude(presetName, logs = '')
   dsExpectAcceptedOption($dsPresets.mode, ('opt-in' 'opt-out'), $logs)
   $isListed = presetName in $dsPresets.listed
   return $dsPresets.mode == 'opt-in' ? $isListed : !$isListed
+
+// dsResolveFlatEntriesToHash(entries: List, logs?: string): Hash
+dsResolveFlatEntriesToHash(entries, logs = '')
+  $logs = dsTrace(logs, 'dsResolveFlatEntriesToHash', Qs('@received -> "Entries":' entries))
+  $hash = {}
+  for $entry in entries
+    $key = $entry[0]
+    $value = $entry[1]
+    $hash[$key] = $value
+  return $hash

@@ -59,4 +59,57 @@ If you use `UseVar(...)` inside a component to register a new token, you are upd
 
 ---
 
+## 🤝 Sharing Variables with JS/TS
+
+It's often useful to share configuration (like icon names or feature flags) between your TypeScript logic and Stylus stylesheets. In Vite-based environments (like Nuxt), you can pass objects via the `define` option.
+
+### The Challenge: "Listified" Objects
+
+Vite converts JS objects passed to Stylus into a "list of lists" (entries) to maintain compatibility. This prevents you from using standard dot-notation (e.g., `$icons.name`) directly.
+
+### The Solution: `dsResolveFlatEntriesToHash`
+
+Use `dsResolveFlatEntriesToHash` to convert these entries back into a native Stylus hash.
+
+> [!NOTE]
+> This utility only supports flat objects. Nested JS objects will be returned as raw keyword lists.
+
+**1. Define in Vite (TS):**
+
+```ts
+// nuxt.config.ts or vite.config.ts
+export default defineConfig({
+  vite: {
+    css: {
+      preprocessorOptions: {
+        stylus: {
+          define: {
+            // Passed as [[fill, "d-icon:fill"], [stroke, "d-icon:stroke"]]
+            ICON_TOKENS: {
+              fill: 'd-icon:fill',
+              stroke: 'd-icon:stroke'
+            }
+          },
+          // Ensures @import '@mszr/hail-styl' resolves correctly
+          paths: [path.resolve(process.cwd(), 'node_modules')],
+          // Automatically imports your design system in every component. stylus files that are directly or indirectly imported into a component will also have access to the design system.
+          additionalData: `@import '${path.resolve(process.cwd(), './design-system.styl')}'`,
+        }
+      }
+    }
+  }
+})
+```
+
+**2. Resolve in Stylus:**
+
+```styl
+// design-system.styl
+$iconTokens = dsResolveFlatEntriesToHash(ICON_TOKENS)
+
+dsSetToken($iconTokens.fill, null) // dot notation works now!
+```
+
+---
+
 For more details on token patterns, see [Designing](./designing.md) [[get raw]](https://raw.githubusercontent.com/mareszhar/hail-styl/main/docs/designing.md).

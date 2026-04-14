@@ -15,6 +15,9 @@ export default defineNuxtConfig({
             1. every vue component
             2. every .styl file that is imported into a vue component
           */
+          define: {
+            DS_PREFIX: 'hail-demo'
+          },
           paths: [path.resolve(process.cwd(), 'node_modules')],
           additionalData: `
           @import '${path.resolve(process.cwd(), './design-system.styl')}'
