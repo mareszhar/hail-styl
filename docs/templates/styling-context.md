@@ -26,7 +26,7 @@ A quick guide to styling with the **hail-styl** design system engine.
 ```styl
 .selector
   UseVar('c:primary', acquamarine)
-  UseVar('c:holiday-brand', 'red')
+  UseVar('c:holiday-brand', red)
   .nested-selector
     color: Var('c:holiday-brand')
 ```
