@@ -157,7 +157,7 @@ dsResolveToken(token, mode, registryName = 'default', fallback = null, logs = ''
   if mode == 'value'
     $registry = dsResolveRegistry(registryName, $logs)
     return $registry[token]
-  $varName = Uqn($dsVarNamePrefix join('-', split(':', token)))
+  $varName = Uqn($dsVarPrefix join('-', split(':', token)))
   if mode == 'var-name'
     return $varName
   return fallback != null ? Uqn('var(' $varName ', ' fallback ')') : Uqn('var(' $varName ')')
