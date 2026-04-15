@@ -48,7 +48,7 @@ These utilities are designed for use in your `design-system.styl` or the files i
 | `dsSetToken` | `(token, value, shouldAllowTokenOverwrites?)` | Registers a token in the system registry. |
 | `dsSetTokenAssignment` | `(name, { prop: value, ... })` | Registers a group of properties as an assignment token. |
 | `dsSetColorChannelToken` | `(token, value)` | Registers or updates a specific color channel (l, c, h, a) for a token with automatic normalization if needed. |
-| `dsResolveFlatEntriesToHash` | `(entries)` | Converts JS-emitted entry lists (e.g., from Vite) into one-level Stylus hashes. |
+| `dsResolveFlatEntriesToHash` | `(entries)` | Converts a JS flat object that was turned into a list of entries back into a Stylus hash. |
 | `dsAddRule` | `(emitter, scoping?, layer?)` | Registers a mixin as a global CSS rule. |
 | `dsColor` | `(base, ...)` | Semantic color adjustment. [See parameters](#dscolor-parameters) |
 | `dsSize` | `(step, base?)` | Calculates size values based on modular steps. |
